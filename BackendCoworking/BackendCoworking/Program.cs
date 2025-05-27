@@ -1,6 +1,8 @@
 using BackendCoworking.DatabaseSets;
 using BackendCoworking.Models;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using BackendCoworking.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
@@ -297,6 +299,8 @@ builder.Services.AddDbContext<CoworkingContextData>(
         await context.SaveChangesAsync(cancellationToken);
     })
 );
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
