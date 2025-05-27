@@ -6,11 +6,20 @@ using BackendCoworking.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
+string CORSOpenPolicy = "OpenCORSPolicy";
 
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Configure Swagger/OpenAPI
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+      name: CORSOpenPolicy,
+      builder => {
+          builder.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+      });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -319,6 +328,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(CORSOpenPolicy);
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

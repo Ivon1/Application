@@ -1,0 +1,10 @@
+.navbar {
+    background-color: white;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 120%;
+}
+
+.active {
+    border-bottom: 2px solid var(--primary-color);
+}

@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using BackendCoworking.DatabaseSets;
 using BackendCoworking.Models.DTOs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackendCoworking.Controllers
 {
     [ApiController]
+    [EnableCors("OpenCORSPolicy")]
     [Route("[controller]")]
     public class WorkspacesController : ControllerBase
     {
