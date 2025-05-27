@@ -1,0 +1,6 @@
+@BackendCoworking_HostAddress = http://localhost:5063
+
+GET {{BackendCoworking_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
