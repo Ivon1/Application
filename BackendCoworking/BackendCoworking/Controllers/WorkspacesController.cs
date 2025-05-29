@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BackendCoworking.DatabaseSets;
+using BackendCoworking.Models;
 using BackendCoworking.Models.DTOs;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace BackendCoworking.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkspaceDTO>>> GetAllWorkspaces()
-        {
+        { 
             var workspaces = await _context.Workspaces
                 .Include(w => w.Capacity)
                 .Include(w => w.WorkspaceAmenities)

@@ -1,8 +1,10 @@
+using AutoMapper;
 using BackendCoworking.DatabaseSets;
+using BackendCoworking.Mappings;
 using BackendCoworking.Models;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using BackendCoworking.Mappings;
+using System;
+using System.Threading;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"];
@@ -80,20 +82,28 @@ builder.Services.AddDbContext<CoworkingContextData>(
         // Add amenities
         var amenities = new List<Amenities>
         {
-            new Amenities { Id = 1, Name = "Wi-Fi", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 2, Name = "Games", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 3, Name = "Coffee", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 4, Name = "Projector", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 5, Name = "Microphone", ImageUrl = "https://placehold.co/600x400/EEE/31343C" }
+            new Amenities { Id = 1, Name = "Wi-Fi", ImageUrl = "https://i.ibb.co/WpPk1hT1/wifi.png" },
+            new Amenities { Id = 2, Name = "Games", ImageUrl = "https://i.ibb.co/nMHCp248/device-gamepad-2.png" },
+            new Amenities { Id = 3, Name = "Coffee", ImageUrl = "https://i.ibb.co/qMgP2y4d/coffee.png" },
+            new Amenities { Id = 4, Name = "AirCondition", ImageUrl = "https://i.ibb.co/F4Jt7X6Z/air-conditioning.png" },
+            new Amenities { Id = 5, Name = "Microphone", ImageUrl = "https://i.ibb.co/hFVCcGFD/microphone.png" }
         };
         context.Set<Amenities>().AddRange(amenities);
 
         // Add photos
+        // Add photos
         var photos = new List<Photos>();
-        for (int i = 1; i <= 11; i++)
-        {
-            photos.Add(new Photos { Id = i, ImageUrl = "https://placehold.co/600x400/EEE/31343C" });
-        }
+        photos.Add(new Photos { Id = 1, ImageUrl = "https://i.ibb.co/27RhrnyY/101931b7ae6f38119bf6b9fa9832610f6c6497ef.png" });
+        photos.Add(new Photos { Id = 2, ImageUrl = "https://i.ibb.co/21CFf0tm/d5653107a69b20b64f00fb13a812060c8e0c1071.png" });
+        photos.Add(new Photos { Id = 3, ImageUrl = "https://i.ibb.co/Mk38Y16j/e90bb3f8c112a868ce37c2a7181d36e2a8b39e51.jpg" });
+        photos.Add(new Photos { Id = 4, ImageUrl = "https://i.ibb.co/GQ40MTvk/3b13dc57f5288df1675a9f4dc8fcaef0553a0f90.png" });
+        photos.Add(new Photos { Id = 5, ImageUrl = "https://i.ibb.co/9kY419bM/4cb6e6b2ab60838a32a15fac8aca47acb834d1e7.png" });
+        photos.Add(new Photos { Id = 6, ImageUrl = "https://i.ibb.co/N0z47v3/07e10141c7a2c2d51b36e43d4ca73d7c0753ed5b.png" });
+        photos.Add(new Photos { Id = 7, ImageUrl = "https://i.ibb.co/KjZDT1pp/99daee0af82ef7f050a23b4f5df0e622a61dcc04.jpg" });
+        photos.Add(new Photos { Id = 8, ImageUrl = "https://i.ibb.co/KjkHZXHj/b2e8c94bc3c1931bc3f2a7979dc48698ed605a5a.jpg" });
+        photos.Add(new Photos { Id = 9, ImageUrl = "https://i.ibb.co/nMPJtbSY/afc3b33e8090e3f9bcad561d128a8719faad4c3d.png" });
+        photos.Add(new Photos { Id = 10, ImageUrl = "https://i.ibb.co/DDxKJpjs/0ab5a14f0fdcf9012f51cd4b501c5ca12e98c72e.png" });
+        photos.Add(new Photos { Id = 11, ImageUrl = "https://i.ibb.co/Kcp542h2/0fa6936c82bab3a7caab82b4c277f6a732667f5a.png" });
         context.Set<Photos>().AddRange(photos);
 
         // Add availabilities
@@ -122,11 +132,11 @@ builder.Services.AddDbContext<CoworkingContextData>(
         // Private room photos (5-8)
         for (int i = 5; i <= 8; i++)
             workspacePhotos.Add(new WorkspacePhotos { WorkspaceId = 2, PhotoId = i });
-        
-        // Meeting room photos (9-11)
-        for (int i = 9; i <= 11; i++)
+
+        // Meeting room photos (10-11)
+        for (int i = 8; i <= 11; i++)
             workspacePhotos.Add(new WorkspacePhotos { WorkspaceId = 3, PhotoId = i });
-            
+
         context.Set<WorkspacePhotos>().AddRange(workspacePhotos);
 
         // Add workspace amenities
@@ -217,20 +227,27 @@ builder.Services.AddDbContext<CoworkingContextData>(
         // Add amenities
         var amenities = new List<Amenities>
         {
-            new Amenities { Id = 1, Name = "Wi-Fi", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 2, Name = "Games", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 3, Name = "Coffee", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 4, Name = "Projector", ImageUrl = "https://placehold.co/600x400/EEE/31343C" },
-            new Amenities { Id = 5, Name = "Microphone", ImageUrl = "https://placehold.co/600x400/EEE/31343C" }
+            new Amenities { Id = 1, Name = "Wi-Fi", ImageUrl = "https://i.ibb.co/WpPk1hT1/wifi.png" },
+            new Amenities { Id = 2, Name = "Games", ImageUrl = "https://i.ibb.co/nMHCp248/device-gamepad-2.png" },
+            new Amenities { Id = 3, Name = "Coffee", ImageUrl = "https://i.ibb.co/qMgP2y4d/coffee.png" },
+            new Amenities { Id = 4, Name = "AirCondition", ImageUrl = "https://i.ibb.co/F4Jt7X6Z/air-conditioning.png" },
+            new Amenities { Id = 5, Name = "Microphone", ImageUrl = "https://i.ibb.co/hFVCcGFD/microphone.png" }
         };
         await context.Set<Amenities>().AddRangeAsync(amenities, cancellationToken);
 
         // Add photos
         var photos = new List<Photos>();
-        for (int i = 1; i <= 11; i++)
-        {
-            photos.Add(new Photos { Id = i, ImageUrl = "https://placehold.co/600x400/EEE/31343C" });
-        }
+        photos.Add(new Photos { Id = 1, ImageUrl = "https://i.ibb.co/27RhrnyY/101931b7ae6f38119bf6b9fa9832610f6c6497ef.png" });
+        photos.Add(new Photos { Id = 2, ImageUrl = "https://i.ibb.co/21CFf0tm/d5653107a69b20b64f00fb13a812060c8e0c1071.png" });
+        photos.Add(new Photos { Id = 3, ImageUrl = "https://i.ibb.co/Mk38Y16j/e90bb3f8c112a868ce37c2a7181d36e2a8b39e51.jpg" });
+        photos.Add(new Photos { Id = 4, ImageUrl = "https://i.ibb.co/GQ40MTvk/3b13dc57f5288df1675a9f4dc8fcaef0553a0f90.png" });
+        photos.Add(new Photos { Id = 5, ImageUrl = "https://i.ibb.co/9kY419bM/4cb6e6b2ab60838a32a15fac8aca47acb834d1e7.png" });
+        photos.Add(new Photos { Id = 6, ImageUrl = "https://i.ibb.co/N0z47v3/07e10141c7a2c2d51b36e43d4ca73d7c0753ed5b.png" });
+        photos.Add(new Photos { Id = 7, ImageUrl = "https://i.ibb.co/KjZDT1pp/99daee0af82ef7f050a23b4f5df0e622a61dcc04.jpg" });
+        photos.Add(new Photos { Id = 8, ImageUrl = "https://i.ibb.co/KjkHZXHj/b2e8c94bc3c1931bc3f2a7979dc48698ed605a5a.jpg" });
+        photos.Add(new Photos { Id = 9, ImageUrl = "https://i.ibb.co/nMPJtbSY/afc3b33e8090e3f9bcad561d128a8719faad4c3d.png" });
+        photos.Add(new Photos { Id = 10, ImageUrl = "https://i.ibb.co/DDxKJpjs/0ab5a14f0fdcf9012f51cd4b501c5ca12e98c72e.png" });
+        photos.Add(new Photos { Id = 11, ImageUrl = "https://i.ibb.co/Kcp542h2/0fa6936c82bab3a7caab82b4c277f6a732667f5a.png" });
         await context.Set<Photos>().AddRangeAsync(photos, cancellationToken);
 
         // Add availabilities
@@ -256,14 +273,14 @@ builder.Services.AddDbContext<CoworkingContextData>(
         for (int i = 1; i <= 4; i++)
             workspacePhotos.Add(new WorkspacePhotos { WorkspaceId = 1, PhotoId = i });
         
-        // Private room photos (5-8)
+        // Private room photos (5-9)
         for (int i = 5; i <= 8; i++)
             workspacePhotos.Add(new WorkspacePhotos { WorkspaceId = 2, PhotoId = i });
-        
-        // Meeting room photos (9-11)
-        for (int i = 9; i <= 11; i++)
+
+        // Meeting room photos (10-11)
+        for (int i = 8; i <= 11; i++)
             workspacePhotos.Add(new WorkspacePhotos { WorkspaceId = 3, PhotoId = i });
-            
+
         await context.Set<WorkspacePhotos>().AddRangeAsync(workspacePhotos, cancellationToken);
 
         // Add workspace amenities

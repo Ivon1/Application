@@ -1,0 +1,19 @@
+.image-gallery {
+    .thumbnail {
+        opacity: 0.5;
+        transition: opacity 0.3s;
+
+        &:hover,
+        &.active {
+            opacity: 1;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+        }
+    }
+}
+
+.main-image {
+    img {
+        border-radius: 16px;
+    } 
+}

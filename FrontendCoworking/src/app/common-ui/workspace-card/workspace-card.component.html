@@ -1,0 +1,66 @@
+<div class="row workspace-card w-100 shadow-sm">
+    <div class="col-md-3">
+        <app-images-gallery [images]="workspace?.photoUrls || []"></app-images-gallery>
+    </div>
+
+    <div class="col-md-7 workspace-card__content">
+
+        <div class="workspace-card__name">
+            {{ workspace?.worksapceTypeName }}
+        </div>
+
+        <p class="workspace-card__description">
+            {{ workspace?.description }}
+        </p>
+
+        <div class="row workspace-card__features">
+            <div class="col-md-6">
+                <div class="workspace-card__feature">
+                    @if(workspace?.amenities) {
+                        Amenities
+                        
+                        <div class="workspace-card__feature-images-container">
+                            @for (amentity of workspace?.amenities; track $index) {
+                                <img 
+                                    [src]="amentity.imageUrl" 
+                                    [alt]="amentity.name || 'Amenity'"
+                                    class="feature-image">
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="workspace-card__feature">
+                    @if(workspace?.capacity){
+                        Capacity options
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="workspace-card__feature">
+                    @if (workspace?.availabilities) {
+                        Availability
+
+                        @for (availabilitie of workspace?.availabilities; track $index) {
+                            <div class="workspace-card__availabilities">
+                                <strong>{{ getFirstTwoWords(availabilitie) }}</strong>
+                                <span>{{ getRemainingText(availabilitie) }}</span>
+                            </div>   
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-2">
+        <div class="workspace-card__actions d-flex justify-content-md-end justify-content-center">
+            <a class="btn btn-primary w-75">Book now</a>
+        </div>
+    </div>
+</div>
+

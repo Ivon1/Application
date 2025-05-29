@@ -1,9 +1,9 @@
 <div class="container">
-    <h1 class="mt-2">Available workspaces</h1>
+    <h1 class="mt-4">Available workspaces</h1>
 
-    <pre class="mt-2 mb-4">
-        <code>
-            {{ workspaces | json }}
-        </code>
-    </pre>
+    <div class="mt-4">
+        @for (workspace of workspaces; track $index) {
+            <app-workspace-card [workspace]="workspace"></app-workspace-card>
+        }
+    </div>
 </div>

@@ -7,6 +7,7 @@ import { WorkspaceInterface } from '../interfaces/workspace-interface';
 @Injectable({
   providedIn: 'root'
 })
+
 export class WorkspaceService {
 
   http: HttpClient = inject(HttpClient);

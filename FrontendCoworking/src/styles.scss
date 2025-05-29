@@ -20,18 +20,18 @@ body {
 h1 {
     font-weight: 700;
     font-size: 40px;
-    line-height: 120%; // not sure
+    line-height: 120%; 
     color: var(--text-color);
 }
 
 h2 {
     font-weight: 600;
     font-size: 32px;
-    line-height: 120%; // not sure
+    line-height: 120%; 
     color: var(--text-color);
 }
 
-btn-primary {
+.btn-primary {
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -39,4 +39,7 @@ btn-primary {
     padding-right: 24px;
     gap: 10px;
     border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
