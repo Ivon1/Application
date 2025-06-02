@@ -17,14 +17,16 @@
             <div class="col-md-6">
                 <div class="workspace-card__feature">
                     @if(workspace?.amenities) {
-                        Amenities
+                        <h5>Amenities</h5>
                         
                         <div class="workspace-card__feature-images-container">
                             @for (amentity of workspace?.amenities; track $index) {
-                                <img 
-                                    [src]="amentity.imageUrl" 
-                                    [alt]="amentity.name || 'Amenity'"
-                                    class="feature-image">
+                                <div class="workspace-card__feature-image">
+                                    <img 
+                                        [src]="amentity.imageUrl" 
+                                        [alt]="amentity.name || 'Amenity'"
+                                        class="feature-image">
+                                </div>
                             }
                         </div>
                     }
@@ -34,7 +36,14 @@
             <div class="col-md-6">
                 <div class="workspace-card__feature">
                     @if(workspace?.capacity){
-                        Capacity options
+                        <h5>Capacity options</h5>
+                        <div class="workspace-card__feature-images-container">
+                            <div class="workspace-card__feature-image">
+                                <img src="assets\Icons\capacity_icon.png" class="feature-image">
+                            </div>
+
+                            <div class="workspace-card__availabilities">{{ workspace?.capacity }}</div>
+                        </div>
                     }
                 </div>
             </div>
@@ -42,7 +51,7 @@
             <div class="col-md-6">
                 <div class="workspace-card__feature">
                     @if (workspace?.availabilities) {
-                        Availability
+                        <h5>Availability</h5> 
 
                         @for (availabilitie of workspace?.availabilities; track $index) {
                             <div class="workspace-card__availabilities">

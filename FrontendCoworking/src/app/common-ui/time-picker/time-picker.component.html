@@ -1,0 +1,23 @@
+<h4 style="margin-top: 32px">{{ title }}</h4>
+
+<div class="time-picker__container" style="margin-top: 12px;">
+    <div class="row">
+        <div class="col-12 dropdown">
+            <!-- Time Dropdown -->
+            <button class="btn custom-dropdown-btn w-100" type="button" id="timeDropdown" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <span>{{ selectedTime ? selectedTime : 'Select time' }}</span>
+                <img src="assets/Icons/arrow-down.png" alt="dropdown icon" style="width: 24px; height: 24px;">
+            </button>
+
+            <!-- Dropdown Menu -->
+            <ul class="dropdown-menu w-100" aria-labelledby="timeDropdown">
+                <li *ngFor="let time of timeOptions">
+                    <a class="dropdown-item" (click)="selectTime(time)" [class.active]="selectedTime === time">
+                        {{ time }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

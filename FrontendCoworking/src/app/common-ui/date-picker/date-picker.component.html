@@ -1,0 +1,48 @@
+<h4 style="margin-top: 32px">{{ title }}</h4>
+
+<div class="date-picker__container" style="margin-top: 12px;">
+    <div class="row">
+        <!-- Day Dropdown -->
+        <div class="col-md-4 dropdown">
+            <button class="btn custom-dropdown-btn w-100" type="button" 
+                    id="dayDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <span>{{ selectedDay ? selectedDay : 'Day' }}</span>
+                <img src="assets/Icons/arrow-down.png" alt="dropdown icon" style="width: 24px; height: 24px;">
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="dayDropdown">
+                <li *ngFor="let day of days">
+                    <a class="dropdown-item" (click)="selectDay(day)" [class.active]="selectedDay === day">{{ day }}</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Month Dropdown -->
+        <div class="col-md-4 dropdown">
+            <button class="btn custom-dropdown-btn w-100" type="button" 
+                    id="monthDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <span>{{ selectedMonth !== null ? getMonthName() : 'Month' }}</span>
+                <img src="assets/Icons/arrow-down.png" alt="dropdown icon" style="width: 24px; height: 24px;">
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="monthDropdown">
+                <li *ngFor="let month of months">
+                    <a class="dropdown-item" (click)="selectMonth(month.value)"
+                        [class.active]="selectedMonth === month.value">{{ month.name }}</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Year Dropdown -->
+        <div class="col-md-4 dropdown">
+            <button class="btn custom-dropdown-btn w-100" type="button" 
+                    id="yearDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <span>{{ selectedYear ? selectedYear : 'Year' }}</span>
+                <img src="assets/Icons/arrow-down.png" alt="dropdown icon" style="width: 24px; height: 24px;">
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="yearDropdown">
+                <li *ngFor="let year of years">
+                    <a class="dropdown-item" (click)="selectYear(year)" [class.active]="selectedYear === year">{{ year }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

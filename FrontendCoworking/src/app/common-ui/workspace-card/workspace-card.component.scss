@@ -45,6 +45,17 @@
     gap: 8px;
     margin-top: 12px;
 
+    .workspace-card__feature-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #F7F6F9;
+        border-radius: 12px;
+        padding: 10px;
+        width: 44px;
+        height: 44px;
+    }
+
     .feature-image {
         width: 24px;
         height: 24px;
@@ -57,4 +68,11 @@
     font-size: 16px;
     line-height: 120%;
     margin-top: 12px;
+}
+
+.workspace-card__capacities {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 120%;
+    margin-left: 16px;
 }
