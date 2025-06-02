@@ -8,7 +8,7 @@
 
     <h1>Book your workspace</h1>
 
-    <form class="booking-form">
+    <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form">
         <div class="custom-column-gap">
             <div class="booking-form__details details-left">
                 <h3 class="booking-form__title">Reservation details</h3>
@@ -18,14 +18,16 @@
                 <input 
                     type="text" 
                     class="form-text-input"
-                    id="booking-form__name">
+                    id="booking-form__name"
+                    formControlName="name">
 
                 <label for="booking-form__email" class="form-label">Email</label>
                 <br>
                 <input 
                     type="email" 
                     class="form-text-input"
-                    id="booking-form__email">
+                    id="booking-form__email"
+                    formControlName="email">
 
                 <label for="booking-form__workspace-type" class="form-label">Workspace type</label>
                 <br>
@@ -37,9 +39,9 @@
                             style="width: 24px; height: 24px;">
                     </button>
                     <ul class="dropdown-menu w-100">
-                        <li><a class="dropdown-item" href="#">Private rooms</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><a class="dropdown-item" >Private rooms</a></li>
+                        <li><a class="dropdown-item" >Another action</a></li>
+                        <li><a class="dropdown-item" >Something else here</a></li>
                     </ul>
                 </div>
 
@@ -56,13 +58,31 @@
             <div class="booking-form__details details-right">
                 <h3 class="booking-form__title">Choose date and time</h3>
 
-                <app-date-picker title="Start date" (dateChange)="onStartDateChange($event)"></app-date-picker>
-                <app-date-picker title="End date" (dateChange)="onEndDateChange($event)"></app-date-picker>
-                
-                <app-time-picker title="Start time" (timeChange)="onStartTimeChange($event)"></app-time-picker>
-                <app-time-picker title="End time" (timeChange)="onEndTimeChange($event)"></app-time-picker>
+                <app-date-picker 
+                    title="Start date" 
+                    [initialDate]="bookingForm.get('startDate')?.value ?? null"
+                    (dateChange)="onStartDateChange($event)">
+                </app-date-picker>
 
-                <button class="btn btn-primary w-100">Submit</button>
+                <app-date-picker 
+                    title="End date" 
+                    [initialDate]="bookingForm.get('endDate')?.value ?? null" 
+                    (dateChange)="onEndDateChange($event)">
+                </app-date-picker>
+                
+                <app-time-picker 
+                    title="Start time" 
+                    [initialTime]="bookingForm.get('startTime')?.value ?? null"
+                    (timeChange)="onStartTimeChange($event)">
+                </app-time-picker>
+
+                <app-time-picker 
+                    title="End time" 
+                    [initialTime]="bookingForm.get('endTime')?.value ?? null"
+                    (timeChange)="onEndTimeChange($event)">
+                </app-time-picker>
+
+                <button class="btn btn-primary w-100" type="submit">Submit</button>
             </div>
         </div>
     </form>

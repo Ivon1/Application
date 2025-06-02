@@ -3,7 +3,7 @@
 <div class="date-picker__container" style="margin-top: 12px;">
     <div class="row">
         <!-- Day Dropdown -->
-        <div class="col-md-4 dropdown">
+        <div class="col-md-4 dropdown mt-md-0 mt-3">
             <button class="btn custom-dropdown-btn w-100" type="button" 
                     id="dayDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <span>{{ selectedDay ? selectedDay : 'Day' }}</span>
@@ -17,7 +17,7 @@
         </div>
 
         <!-- Month Dropdown -->
-        <div class="col-md-4 dropdown">
+        <div class="col-md-4 dropdown mt-md-0 mt-3">
             <button class="btn custom-dropdown-btn w-100" type="button" 
                     id="monthDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <span>{{ selectedMonth !== null ? getMonthName() : 'Month' }}</span>
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Year Dropdown -->
-        <div class="col-md-4 dropdown">
+        <div class="col-md-4 dropdown mt-md-0 mt-3">
             <button class="btn custom-dropdown-btn w-100" type="button" 
                     id="yearDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <span>{{ selectedYear ? selectedYear : 'Year' }}</span>

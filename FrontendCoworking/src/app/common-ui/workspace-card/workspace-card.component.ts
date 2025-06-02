@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { WorkspaceInterface } from '../../data/interfaces/workspace-interface';
 import { ImagesGalleryComponent } from "../images-gallery/images-gallery.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-workspace-card',
-  imports: [ImagesGalleryComponent],
+  imports: [ImagesGalleryComponent, RouterLink],
   templateUrl: './workspace-card.component.html',
   styleUrl: './workspace-card.component.scss'
 })

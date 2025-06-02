@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 
 export class DatePickerComponent implements OnInit {
   @Input() title: string = 'Start date';
+  @Input() initialDate: Date | null = null;
   
   days: number[] = [];
   months: { value: number, name: string } [] = [];
@@ -26,6 +27,12 @@ export class DatePickerComponent implements OnInit {
     this.generateDays();
     this.generateMonths();
     this.generateYears();
+    
+    if (this.initialDate) {
+      this.selectedDay = this.initialDate.getDate();
+      this.selectedMonth = this.initialDate.getMonth();
+      this.selectedYear = this.initialDate.getFullYear();
+    }
     
     this.emitSelectedDate();
   }
