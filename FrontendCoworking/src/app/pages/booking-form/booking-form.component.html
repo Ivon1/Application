@@ -19,7 +19,7 @@
                     type="text" 
                     class="form-text-input"
                     id="booking-form__name"
-                    formControlName="name">
+                    formControlName="name">                   
 
                 <label for="booking-form__email" class="form-label">Email</label>
                 <br>
@@ -34,24 +34,44 @@
                 <div class="dropdown w-100">
                     <button class="btn custom-dropdown-btn w-100" 
                             type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span>Choose your workspace</span>
+                        <span id="selectedWorkspace">
+                            {{ selectedWorkspace?.worksapceTypeName || 'Choose your workspace' }}
+                        </span>
                         <img src="assets\Icons/arrow-down.png" alt="dropdown icon" 
                             style="width: 24px; height: 24px;">
                     </button>
-                    <ul class="dropdown-menu w-100">
-                        <li><a class="dropdown-item" >Private rooms</a></li>
-                        <li><a class="dropdown-item" >Another action</a></li>
-                        <li><a class="dropdown-item" >Something else here</a></li>
+                    <ul class="dropdown-menu w-100" id="workspacesTypesDropdown">
+                        @if (workspaces$) {
+                            <ng-container *ngFor="let workspace of workspaces$ | async">
+                                <li>
+                                    <a class="dropdown-item" (click)="onWorkspaceTypeSelect(workspace)">
+                                        {{ workspace.worksapceTypeName }}
+                                    </a>
+                                </li>
+                            </ng-container>
+                        } @else {
+                            <li><a class="dropdown-item" href="#">Loading...</a></li>
+                        }
                     </ul>
                 </div>
 
-                <label class="form-label">What room size do you need?</label>
+                <label class="form-label">What availability do you need?</label>
                 <br>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="radioDefault" id="radioDefault1">
-                    <label class="form-check-label" for="radioDefault1">
-                        Default radio
-                    </label>
+                <div id="availabilitiesCheckboxes" style="margin-top: 24px;">
+                    @for (availability of selectedWorkspace?.availabilities; track availability) {
+                    <div class="form-check no-padding">
+                        <input 
+                            class="form-check-input" 
+                            type="radio" 
+                            [id]="'availability-' + availability.name" 
+                            [value]="availability"
+                            formControlName="availabilityType"
+                            name="availabilityType">
+                        <label class="form-check-label" [for]="'availability-' + availability.name">
+                            {{ availability.name }}
+                        </label>
+                    </div>
+                    }
                 </div>
             </div>
 
@@ -82,7 +102,7 @@
                     (timeChange)="onEndTimeChange($event)">
                 </app-time-picker>
 
-                <button class="btn btn-primary w-100" type="submit">Submit</button>
+                <button class="btn btn-primary w-100" type="submit" [disabled]="bookingForm.invalid">Submit</button>
             </div>
         </div>
     </form>

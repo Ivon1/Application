@@ -1,4 +1,5 @@
 import { AmenityInterface } from "./amenity-interface";
+import { AvailabilityInterface } from "./availability-interface";
 
 export interface WorkspaceInterface {
     id:number;
@@ -7,5 +8,5 @@ export interface WorkspaceInterface {
     capacity: string;
     amenities: AmenityInterface[];
     photoUrls: string[];
-    availabilities: string[];
+    availabilities: AvailabilityInterface[];
 }

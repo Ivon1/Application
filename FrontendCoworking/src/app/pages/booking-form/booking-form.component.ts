@@ -1,50 +1,66 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePickerComponent } from "../../common-ui/date-picker/date-picker.component";
-import { EventEmitter } from '@angular/core';
-import { Output } from '@angular/core';
 import { TimePickerComponent } from '../../common-ui/time-picker/time-picker.component';
+import { WorkspaceService } from '../../data/services/workspace.service';
+import { Observable } from 'rxjs';
+import { WorkspaceInterface } from '../../data/interfaces/workspace-interface';
+import { AvailabilityInterface } from '../../data/interfaces/availability-interface';
 
 @Component({
-  selector: 'app-booking-form',
-  imports: [CommonModule, DatePickerComponent, TimePickerComponent, ReactiveFormsModule],
-  templateUrl: './booking-form.component.html',
-  styleUrl: './booking-form.component.scss'
+    selector: 'app-booking-form',
+    imports: [CommonModule, DatePickerComponent, TimePickerComponent, ReactiveFormsModule],
+    templateUrl: './booking-form.component.html',
+    styleUrl: './booking-form.component.scss'
 })
 
 export class BookingFormComponent {
-  bookingForm = new FormGroup ({
-    name: new FormControl(''),
-    email: new FormControl(''),
-    startDate: new FormControl<Date | null>(null),
-    endDate: new FormControl<Date | null>(null),
-    startTime: new FormControl<string | null>(null),
-    endTime: new FormControl<string | null>(null),
-  });
-  
-  constructor(private location: Location) { }
+    bookingForm = new FormGroup
+        ({
+            name: new FormControl('', Validators.required),
+            email: new FormControl('', [Validators.required, Validators.email]),
+            startDate: new FormControl<Date | null>(null, Validators.required),
+            endDate: new FormControl<Date | null>(null, Validators.required),
+            startTime: new FormControl<string | null>(null, Validators.required),
+            endTime: new FormControl<string | null>(null, Validators.required),
+            workspaceType: new FormControl<WorkspaceInterface | null>(null, Validators.required),
+            availabilityType: new FormControl<AvailabilityInterface | null>(null, Validators.required),
+        });
 
-  goBack() { this.location.back(); }
+    workspaces$!: Observable<WorkspaceInterface[]>;
+    workspaceService = inject(WorkspaceService);
+    selectedWorkspace: WorkspaceInterface | null = null;
 
-  onStartDateChange(date: Date | null) { 
-    this.bookingForm.get('startDate')?.setValue(date);
-  }
+    constructor(private location: Location) {
+        this.workspaces$ = this.workspaceService.getAllWorkspaces();
+    }
 
-  onEndDateChange(date: Date | null) {  
-    this.bookingForm.get('endDate')?.setValue(date);
-  }
+    goBack() { this.location.back(); }
 
-  onStartTimeChange(time: string) {
-    this.bookingForm.get('startTime')?.setValue(time);
-  } 
+    onStartDateChange(date: Date | null) {
+        this.bookingForm.get('startDate')?.setValue(date);
+    }
 
-  onEndTimeChange(time: string) {
-    this.bookingForm.get('endTime')?.setValue(time);
-  } 
+    onEndDateChange(date: Date | null) {
+        this.bookingForm.get('endDate')?.setValue(date);
+    }
 
-  onSubmit() {
-    console.warn(this.bookingForm.value);
-  }
+    onStartTimeChange(time: string) {
+        this.bookingForm.get('startTime')?.setValue(time);
+    }
+
+    onEndTimeChange(time: string) {
+        this.bookingForm.get('endTime')?.setValue(time);
+    }
+
+    onWorkspaceTypeSelect(workspace: WorkspaceInterface) {
+        this.selectedWorkspace = workspace;
+        this.bookingForm.get('workspaceType')?.setValue(this.selectedWorkspace);
+    }
+
+    onSubmit() {
+        console.warn(this.bookingForm.value);
+    }
 }

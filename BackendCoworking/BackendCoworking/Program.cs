@@ -13,7 +13,7 @@ string CORSOpenPolicy = "OpenCORSPolicy";
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configure Swagger/OpenAPI
+// Configure Cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(

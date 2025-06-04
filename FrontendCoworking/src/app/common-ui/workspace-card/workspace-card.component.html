@@ -55,8 +55,8 @@
 
                         @for (availabilitie of workspace?.availabilities; track $index) {
                             <div class="workspace-card__availabilities">
-                                <strong>{{ getFirstTwoWords(availabilitie) }}</strong>
-                                <span>{{ getRemainingText(availabilitie) }}</span>
+                                <strong>{{ getFirstTwoWords(availabilitie.name) }}</strong>
+                                <span>{{ getRemainingText(availabilitie.name) }}</span>
                             </div>   
                         }
                     }
