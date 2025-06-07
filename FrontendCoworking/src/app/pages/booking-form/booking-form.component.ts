@@ -151,7 +151,6 @@ export class BookingFormComponent implements OnInit {
             console.log('Start DateTime:', startDateTime);
             console.log('End DateTime:', endDateTime);
 
-
             const startTimeParsed = this.timeUtilService.parseTime(startTime);
             const endTimeParsed = this.timeUtilService.parseTime(endTime);
 
@@ -161,7 +160,7 @@ export class BookingFormComponent implements OnInit {
             console.log('End DateTime:', endDateTime);
 
             const booking: BookingInterface = {
-                id: -1,
+                id: this.isEditMode ? this.bookingId : -1,
                 name: this.bookingForm.get('name')?.value || null,
                 email: this.bookingForm.get('email')?.value || null,
                 startDate: startDateTime,
@@ -171,7 +170,14 @@ export class BookingFormComponent implements OnInit {
             };
 
             if (this.isEditMode) {
-                console.log(this.bookingForm.value);
+                this.bookingService.updateBooking(booking).subscribe({
+                    next: (response: any) => {
+                        alert(response.message);
+                    },
+                    error: (error) => {
+                        alert('Error updating booking: ' + error.message);
+                    }
+                });
             } else {
                 this.bookingService.createBooking(booking).subscribe({
                     next: (response: any) => {

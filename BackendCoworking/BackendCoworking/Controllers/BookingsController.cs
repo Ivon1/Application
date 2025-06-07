@@ -312,5 +312,177 @@ namespace BackendCoworking.Controllers
                 });
             }
         }
+
+        // PUT Update Booking
+        [HttpPut]
+        public async Task<IActionResult> UpdateBooking([FromBody] BookingDTO bookingDTO)
+        {
+            try
+            {
+                // Validate input
+                if (bookingDTO == null || bookingDTO.Id <= 0)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Valid booking data with ID is required"
+                    });
+                }
+
+                // Find the existing booking
+                var existingBooking = await _context.Bookings.FindAsync(bookingDTO.Id);
+                if (existingBooking == null)
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        Message = $"Booking with ID {bookingDTO.Id} not found"
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(bookingDTO.Name))
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Name is required"
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(bookingDTO.Email) || !bookingDTO.Email.Contains('@'))
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Valid email is required"
+                    });
+                }
+
+                if (bookingDTO.StartDate >= bookingDTO.EndDate)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "End date must be after start date"
+                    });
+                }
+
+                if (bookingDTO.Workspace == null || bookingDTO.Workspace.Id <= 0)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Valid workspace is required"
+                    });
+                }
+
+                if (bookingDTO.Availability == null || bookingDTO.Availability.Id <= 0)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Valid availability is required"
+                    });
+                }
+
+                // Check if workspace exists
+                var workspaceId = bookingDTO.Workspace.Id;
+                var workspace = await _context.Workspaces
+                    .Include(w => w.Capacity)
+                    .FirstOrDefaultAsync(w => w.Id == workspaceId);
+
+                if (workspace == null)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = $"Workspace with ID {workspaceId} not found"
+                    });
+                }
+
+                // Check if availability exists
+                var availabilityId = bookingDTO.Availability.Id;
+                var availability = await _context.Availabilities.FindAsync(availabilityId);
+
+                if (availability == null)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = $"Availability with ID {availabilityId} not found"
+                    });
+                }
+
+                // Check if availability belongs to workspace
+                var validCombination = await _context.WorkspaceAvailabilitys
+                    .AnyAsync(wa => wa.WorkspaceId == workspaceId && wa.AvailabilityId == availabilityId);
+
+                if (!validCombination)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "The selected availability does not belong to the selected workspace"
+                    });
+                }
+
+                // Convert local dates to UTC dates
+                DateTime startDateUtc = DateTime.SpecifyKind(bookingDTO.StartDate.ToUniversalTime(), DateTimeKind.Utc);
+                DateTime endDateUtc = DateTime.SpecifyKind(bookingDTO.EndDate.ToUniversalTime(), DateTimeKind.Utc);
+
+                // Check for overlapping bookings (excluding the current booking)
+                var overlappingBooking = await _context.Bookings
+                    .AnyAsync(b =>
+                        b.Id != bookingDTO.Id && // Exclude the current booking
+                        b.WorkspaceId == workspaceId &&
+                        b.AvailabilityId == availabilityId &&
+                        ((b.StartDate <= startDateUtc && b.EndDate > startDateUtc) ||
+                         (b.StartDate < endDateUtc && b.EndDate >= endDateUtc) ||
+                         (b.StartDate >= startDateUtc && b.EndDate <= endDateUtc)));
+
+                if (overlappingBooking)
+                {
+                    return Conflict(new
+                    {
+                        Success = false,
+                        Message = "The selected time slot is already booked"
+                    });
+                }
+
+                // Update booking properties
+                existingBooking.Name = bookingDTO.Name;
+                existingBooking.Email = bookingDTO.Email;
+                existingBooking.WorkspaceId = workspaceId;
+                existingBooking.AvailabilityId = availabilityId;
+                existingBooking.StartDate = startDateUtc;
+                existingBooking.EndDate = endDateUtc;
+
+                // Save changes
+                await _context.SaveChangesAsync();
+
+                // Format dates for the success message
+                string startDateFormatted = bookingDTO.StartDate.ToString("MMMM d, yyyy");
+                string endDateFormatted = bookingDTO.EndDate.ToString("MMMM d, yyyy");
+
+                string successMessage = $"Your {workspace.WorksapceTypeName.ToLower()} booking has been updated successfully. Your {workspace.Capacity.CapacityTypeName} is now booked from {startDateFormatted} to {endDateFormatted}. A confirmation has been sent to your email {bookingDTO.Email}.";
+
+                // Return success response
+                return Ok(new
+                {
+                    Success = true,
+                    Message = successMessage,
+                    BookingId = existingBooking.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while updating the booking",
+                    Error = ex.Message
+                });
+            }
+        }
     }
 }

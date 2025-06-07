@@ -37,4 +37,18 @@ export class BookingService {
   deleteBooking(id: number) : Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  updateBooking(booking: BookingInterface): Observable<BookingInterface> {
+    const bookingDto = {
+      Id: booking.id,
+      Name: booking.name,
+      Email: booking.email,
+      StartDate: booking.startDate,
+      EndDate: booking.endDate,
+      Workspace: booking.workspace,
+      Availability: booking.availability
+    };
+
+    return this.http.put<BookingInterface>(`${this.baseUrl}`, bookingDto);
+  }
 }
