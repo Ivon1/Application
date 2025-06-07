@@ -3,6 +3,7 @@ using BackendCoworking.DatabaseSets;
 using BackendCoworking.Models;
 using BackendCoworking.Models.DTOs;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -46,10 +47,8 @@ namespace BackendCoworking.Controllers
                     .ToListAsync();
 
                 var bookingDtos = _mapper.Map<List<BookingDTO>>(bookings);
-                return Ok(new
-                {
-                    Bookings = bookingDtos
-                });
+
+                return Ok(bookingDtos);
             }
             catch (Exception ex)
             {
@@ -92,10 +91,7 @@ namespace BackendCoworking.Controllers
                     });
                 }
                 var bookingDto = _mapper.Map<BookingDTO>(booking);
-                return Ok(new
-                {
-                    Booking = bookingDto
-                });
+                return Ok(bookingDto);
             }
             catch (Exception ex)
             {
@@ -255,12 +251,19 @@ namespace BackendCoworking.Controllers
                 string successMessage = $"Your {workspace.WorksapceTypeName.ToLower()} for {workspace.Capacity.CapacityTypeName} is booked from {startDateFormatted} to {endDateFormatted}. A confirmation has been sent to your email {bookingDto.Email}.";
 
                 // Return success response with the formatted message
-                return Created($"/bookings/{booking.Id}", new
+                return Ok(new
                 {
                     Success = true,
                     Message = successMessage,
                     BookingId = booking.Id
                 });
+
+                //return Created($"/bookings/{booking.Id}", new
+                //{
+                //    Success = true,
+                //    Message = successMessage,
+                //    BookingId = booking.Id
+                //});
             }
             catch (Exception ex)
             {

@@ -42,6 +42,13 @@ h3 {
     color: var(--text-color);
 }
 
+h4 {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 120%;
+    color: var(--text-color);
+}
+
 h5 {
     font-weight: 600;
     font-size: 18px;
@@ -194,4 +201,54 @@ h5 {
     font-size: 14px;
     line-height: 120%;
     margin-bottom: 16px;
+}
+
+.btn-outline-edit {
+    width: 44px;
+    height: 44px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        border: 1px solid var(--border-color);
+        background-color: #F7F6F9;
+    }
+}
+
+.btn-outline-danger {
+    width: 44px;
+    height: 44px;
+    background-color: transparent;
+    border: 1px solid #F56E6E;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        border: 1px solid #F56E6E;
+        background-color: #FFF0F0;
+    }
+}
+
+.btn-outline {
+    width: 196px;
+    height: 48px;
+    gap: 10px;
+    border-radius: 8px;
+    border: 2px solid var(--primary-color);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 120%;
+    color: var(--primary-color);
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: rgba(92, 90, 243, 0.04);
+    }
 }

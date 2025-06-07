@@ -1,0 +1,46 @@
+<div class="booking-card">
+    <div class="row">
+        <div class="col-md-3">
+            <img [src]="booking?.workspace?.photoUrls?.[0]" alt="Booking Image" 
+                class="booking-card__image img-fluid mx-auto d-block">
+        </div>
+
+        <div class="col-md-7">
+            <div class="booking-card__title align-content-start mt-md-0 mt-4">
+                {{ booking?.workspace?.worksapceTypeName }} for {{ booking?.workspace?.capacity }}
+            </div>
+
+            <div class="booking-card__time-info-container d-flex align-items-center justify-content-start">
+                <div class="booking-card__feature-image">
+                    <img class="booking-card__feature-image" src="assets/Icons/calendar.png" alt="">
+                </div>
+                <h4 class="m-0 ms-2">
+                    {{ booking?.startDate | date }} - {{ booking?.endDate | date }} 
+                    {{ timeService.differenceBetweenDates(booking?.startDate, booking?.endDate) }}
+                </h4>
+            </div>
+
+            <div class="booking-card__time-info-container d-flex align-items-center justify-content-start">
+                <div class="booking-card__feature-image">
+                    <img class="booking-card__feature-image" src="assets/Icons/clock-hour.png" alt="">
+                </div>
+                <h4 class="m-0 ms-2"> 
+                    {{ booking?.startDate | date: 'shortTime' }} - {{ booking?.endDate | date: 'shortTime' }} 
+                </h4>
+            </div>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-start justify-content-end justify-content-md-end align-items-md-start justify-content-center align-items-center">
+            <div class="booking-card__actions mt-3">
+                <a class="btn btn-outline-edit booking-card__action-button me-2">
+                    <img src="assets/Icons/edit.png" alt="Edit Booking" class="booking-card__action-icon"
+                    [routerLink]="['/bookingform', booking?.id]">
+                </a>
+
+                <button class="btn btn-outline-danger booking-card__action-button" (click)="deleteBooking()">
+                    <img src="assets/Icons/trash.png" alt="Delete Booking" class="booking-card__action-icon">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,23 @@
-<div class="container">
-    <h1 class="mt-2">My bookings on Green Coworking</h1>
+<div class="container mb-5">
+    <h1 class="mt-4">My bookings on Green Coworking</h1>
+
+    @if (bookings$ | async; as bookings) {
+
+        @if (bookings.length === 0) {
+            <div class="container empty-bookings-container">
+                <img src="assets/Icons/loop.png" class="empty-bookings-container__image"/>
+                <div class="empty-bookings-container__title">You don`t have any bookings yet</div>
+                <div class="empty-bookings-container__subtitle">Start by choosing a coworking space</div>
+                <a class="btn btn-primary" routerLink="">Select a workspace</a>
+            </div>
+        } 
+        @else if (bookings.length > 0) {
+            @for (booking of bookings; track booking.id) {
+                <app-booking-card [booking]="booking"></app-booking-card>
+            }
+        }
+        
+    } @else {
+        <span>Loading...</span>
+    } 
 </div>

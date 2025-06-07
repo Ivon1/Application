@@ -7,4 +7,5 @@ export const routes: Routes = [
     { path: '', component: WorkspacesPageComponent },
     { path: 'bookings', component: BookingsPageComponent },
     { path: 'bookingform', component: BookingFormComponent },
+    { path: 'bookingform/:id', component: BookingFormComponent }
 ];

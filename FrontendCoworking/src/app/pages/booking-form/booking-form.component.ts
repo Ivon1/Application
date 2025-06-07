@@ -1,13 +1,16 @@
-import { Component, inject } from '@angular/core';
-import { Location } from '@angular/common';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { Location, CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePickerComponent } from "../../common-ui/date-picker/date-picker.component";
 import { TimePickerComponent } from '../../common-ui/time-picker/time-picker.component';
 import { WorkspaceService } from '../../data/services/workspace.service';
-import { Observable } from 'rxjs';
 import { WorkspaceInterface } from '../../data/interfaces/workspace-interface';
 import { AvailabilityInterface } from '../../data/interfaces/availability-interface';
+import { BookingService } from '../../data/services/booking.service';
+import { BookingInterface } from '../../data/interfaces/booking-interface';
+import { TimeUtilService } from '../../data/services/time-util.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-booking-form',
@@ -16,43 +19,67 @@ import { AvailabilityInterface } from '../../data/interfaces/availability-interf
     styleUrl: './booking-form.component.scss'
 })
 
-export class BookingFormComponent {
+export class BookingFormComponent implements OnInit {
     bookingForm = new FormGroup
-        ({
-            name: new FormControl('', Validators.required),
-            email: new FormControl('', [Validators.required, Validators.email]),
-            startDate: new FormControl<Date | null>(null, Validators.required),
-            endDate: new FormControl<Date | null>(null, Validators.required),
-            startTime: new FormControl<string | null>(null, Validators.required),
-            endTime: new FormControl<string | null>(null, Validators.required),
-            workspaceType: new FormControl<WorkspaceInterface | null>(null, Validators.required),
-            availabilityType: new FormControl<AvailabilityInterface | null>(null, Validators.required),
-        });
+    ({
+        name: new FormControl('', Validators.required),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        startDate: new FormControl<Date | null>(null, Validators.required),
+        endDate: new FormControl<Date | null>(null, Validators.required),
+        startTime: new FormControl<string | null>(null, Validators.required),
+        endTime: new FormControl<string | null>(null, Validators.required),
+        workspaceType: new FormControl<WorkspaceInterface | null>(null, Validators.required),
+        availabilityType: new FormControl<AvailabilityInterface | null>(null, Validators.required),
+    });
 
     workspaces$!: Observable<WorkspaceInterface[]>;
     workspaceService = inject(WorkspaceService);
+    bookingService = inject(BookingService);
+    timeUtilService = inject(TimeUtilService);
+    route = inject(ActivatedRoute);
     selectedWorkspace: WorkspaceInterface | null = null;
+
+    isEditMode = false;
+    bookingId: number | null = null;
+    pageTitle = 'Book your workspace';
 
     constructor(private location: Location) {
         this.workspaces$ = this.workspaceService.getAllWorkspaces();
+    }
+
+    ngOnInit() {
+        this.route.paramMap.subscribe(params => {
+            const id = params.get('id');
+            if (id) {
+                this.isEditMode = true;
+                this.bookingId = parseInt(id, 10);
+                this.pageTitle = 'Edit your booking';
+                this.loadBookingData(this.bookingId);
+            }
+        });
     }
 
     goBack() { this.location.back(); }
 
     onStartDateChange(date: Date | null) {
         this.bookingForm.get('startDate')?.setValue(date);
+        const endDateControl = this.bookingForm.get('endDate');
+        console.log('Start date changed:', endDateControl);
     }
 
     onEndDateChange(date: Date | null) {
         this.bookingForm.get('endDate')?.setValue(date);
+        console.log('End date changed:', date);
     }
 
     onStartTimeChange(time: string) {
         this.bookingForm.get('startTime')?.setValue(time);
+        console.log('Start time changed:', time);
     }
 
     onEndTimeChange(time: string) {
         this.bookingForm.get('endTime')?.setValue(time);
+        console.log('Start time changed:', time);
     }
 
     onWorkspaceTypeSelect(workspace: WorkspaceInterface) {
@@ -60,7 +87,88 @@ export class BookingFormComponent {
         this.bookingForm.get('workspaceType')?.setValue(this.selectedWorkspace);
     }
 
+    loadBookingData(id: number) {
+        this.bookingService.getBookingById(id).subscribe({
+            next: (booking) => {
+                if (booking) {
+                    this.selectedWorkspace = booking.workspace;
+                    
+                    // Extract time from date objects
+                    const startTime = booking.startDate ? 
+                        this.timeUtilService.formatTime(
+                            new Date(booking.startDate).getHours(),
+                            new Date(booking.startDate).getMinutes()
+                        ) : null;
+                        
+                    const endTime = booking.endDate ? 
+                        this.timeUtilService.formatTime(
+                            new Date(booking.endDate).getHours(),
+                            new Date(booking.endDate).getMinutes()
+                        ) : null;
+                    
+
+                    this.bookingForm.patchValue({
+                        name: booking.name,
+                        email: booking.email,
+                        startDate: booking.startDate ? new Date(booking.startDate) : null,
+                        endDate: booking.endDate ? new Date(booking.endDate) : null,
+                        startTime: startTime,
+                        endTime: endTime,
+                        workspaceType: booking.workspace,
+                        availabilityType: booking.availability
+                    });
+                }
+            },
+            error: (error) => {
+                console.error('Error loading booking data:', error);
+            }
+        });
+    }
+
     onSubmit() {
-        console.warn(this.bookingForm.value);
+        // Combine date and time into a single Date object
+        const startDate = this.bookingForm.get('startDate')?.value;
+        const endDate = this.bookingForm.get('endDate')?.value;
+        const startTime = this.bookingForm.get('startTime')?.value;
+        const endTime = this.bookingForm.get('endTime')?.value;
+
+        if (startDate && endDate && startTime && endTime) {
+            const startDateTime = new Date(startDate);
+            const endDateTime = new Date(endDate);
+            console.log('Start DateTime:', startDateTime);
+            console.log('End DateTime:', endDateTime);
+
+
+            const startTimeParsed = this.timeUtilService.parseTime(startTime);
+            const endTimeParsed = this.timeUtilService.parseTime(endTime);
+
+            startDateTime.setHours(startTimeParsed.hours, startTimeParsed.minutes);
+            endDateTime.setHours(endTimeParsed.hours, endTimeParsed.minutes);
+            console.log('Start DateTime:', startDateTime);
+            console.log('End DateTime:', endDateTime);
+
+            const booking: BookingInterface = {
+                id: -1,
+                name: this.bookingForm.get('name')?.value || null,
+                email: this.bookingForm.get('email')?.value || null,
+                startDate: startDateTime,
+                endDate: endDateTime,
+                workspace: this.bookingForm.get('workspaceType')?.value || null,
+                availability: this.bookingForm.get('availabilityType')?.value || null
+            };
+
+
+            this.bookingService.createBooking(booking).subscribe({
+                next: (response: any) => {
+                    console.log('Booking created successfully:', response);
+                    alert(response.message);
+                },
+                error: (error) => {
+                    console.error('Error creating booking:', error);
+                }
+            });
+        } else {
+            console.error('Please fill in all required fields.');
+        }
     }
 }
