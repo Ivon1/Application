@@ -21,16 +21,16 @@ import { ActivatedRoute } from '@angular/router';
 
 export class BookingFormComponent implements OnInit {
     bookingForm = new FormGroup
-    ({
-        name: new FormControl('', Validators.required),
-        email: new FormControl('', [Validators.required, Validators.email]),
-        startDate: new FormControl<Date | null>(null, Validators.required),
-        endDate: new FormControl<Date | null>(null, Validators.required),
-        startTime: new FormControl<string | null>(null, Validators.required),
-        endTime: new FormControl<string | null>(null, Validators.required),
-        workspaceType: new FormControl<WorkspaceInterface | null>(null, Validators.required),
-        availabilityType: new FormControl<AvailabilityInterface | null>(null, Validators.required),
-    });
+        ({
+            name: new FormControl('', Validators.required),
+            email: new FormControl('', [Validators.required, Validators.email]),
+            startDate: new FormControl<Date | null>(null, Validators.required),
+            endDate: new FormControl<Date | null>(null, Validators.required),
+            startTime: new FormControl<string | null>(null, Validators.required),
+            endTime: new FormControl<string | null>(null, Validators.required),
+            workspaceType: new FormControl<WorkspaceInterface | null>(null, Validators.required),
+            availabilityType: new FormControl<AvailabilityInterface | null>(null, Validators.required),
+        });
 
     workspaces$!: Observable<WorkspaceInterface[]>;
     workspaceService = inject(WorkspaceService);
@@ -92,20 +92,33 @@ export class BookingFormComponent implements OnInit {
             next: (booking) => {
                 if (booking) {
                     this.selectedWorkspace = booking.workspace;
-                    
-                    // Extract time from date objects
-                    const startTime = booking.startDate ? 
+                    console.log('selected availability:', booking.availability?.name);
+
+                    const startTime = booking.startDate ?
                         this.timeUtilService.formatTime(
                             new Date(booking.startDate).getHours(),
                             new Date(booking.startDate).getMinutes()
                         ) : null;
-                        
-                    const endTime = booking.endDate ? 
+
+                    const endTime = booking.endDate ?
                         this.timeUtilService.formatTime(
                             new Date(booking.endDate).getHours(),
                             new Date(booking.endDate).getMinutes()
                         ) : null;
-                    
+
+                    let matchingAvailability = null;
+                    if (booking.availability && this.selectedWorkspace?.availabilities) {
+                        matchingAvailability = this.selectedWorkspace.availabilities.find(
+                            a => a.id === booking.availability?.id
+                        );
+                    }
+
+                    setTimeout(() => {
+                        if (matchingAvailability) {
+                            this.bookingForm.get('availabilityType')?.setValue(matchingAvailability);
+                        }
+                    }, 0);
+
 
                     this.bookingForm.patchValue({
                         name: booking.name,
@@ -157,16 +170,21 @@ export class BookingFormComponent implements OnInit {
                 availability: this.bookingForm.get('availabilityType')?.value || null
             };
 
+            if (this.isEditMode) {
+                console.log(this.bookingForm.value);
+            } else {
+                this.bookingService.createBooking(booking).subscribe({
+                    next: (response: any) => {
+                        console.log('Booking created successfully:', response);
+                        alert(response.message);
+                    },
+                    error: (error) => {
+                        console.error('Error creating booking:', error);
+                    }
+                });
+            }
 
-            this.bookingService.createBooking(booking).subscribe({
-                next: (response: any) => {
-                    console.log('Booking created successfully:', response);
-                    alert(response.message);
-                },
-                error: (error) => {
-                    console.error('Error creating booking:', error);
-                }
-            });
+
         } else {
             console.error('Please fill in all required fields.');
         }

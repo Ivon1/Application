@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,9 +9,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './time-picker.component.scss'
 })
 
-export class TimePickerComponent implements OnInit {
+export class TimePickerComponent implements OnInit, OnChanges {
   @Input() title: string = 'Start time';
-  @Input() initialTime : string | null = null;
+  @Input() initialTime: string | null = null;
   @Output() timeChange = new EventEmitter<string>();
   
   timeOptions: string[] = [];
@@ -19,6 +19,20 @@ export class TimePickerComponent implements OnInit {
   
   ngOnInit(): void {
     this.generateTimeOptions();
+    this.setInitialTime();
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    // Check if initialTime has changed and update selected time
+    if (changes['initialTime'] && changes['initialTime'].currentValue) {
+      this.setInitialTime();
+    }
+  }
+  
+  setInitialTime(): void {
+    if (this.initialTime && this.timeOptions.includes(this.initialTime)) {
+      this.selectedTime = this.initialTime;
+    }
   }
   
   generateTimeOptions(): void {
@@ -36,6 +50,8 @@ export class TimePickerComponent implements OnInit {
         this.timeOptions.push(`${displayHourStr}:30 ${period}`);
       }
     }
+  
+    this.setInitialTime();
   }
   
   selectTime(time: string): void {

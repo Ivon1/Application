@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './date-picker.component.scss'
 })
 
-export class DatePickerComponent implements OnInit {
+export class DatePickerComponent implements OnInit, OnChanges {
   @Input() title: string = 'Start date';
   @Input() initialDate: Date | null = null;
   
@@ -28,13 +28,26 @@ export class DatePickerComponent implements OnInit {
     this.generateMonths();
     this.generateYears();
     
+    this.setInitialDateValues();
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialDate'] && changes['initialDate'].currentValue) {
+      this.setInitialDateValues();
+    }
+  }
+  
+  setInitialDateValues(): void {
     if (this.initialDate) {
       this.selectedDay = this.initialDate.getDate();
       this.selectedMonth = this.initialDate.getMonth();
       this.selectedYear = this.initialDate.getFullYear();
+      
+      if (!this.years.includes(this.selectedYear)) {
+        this.years.push(this.selectedYear);
+        this.years.sort((a, b) => a - b);
+      }
     }
-    
-    this.emitSelectedDate();
   }
 
   generateDays(): void {
