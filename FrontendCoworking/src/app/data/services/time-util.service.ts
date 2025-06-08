@@ -54,7 +54,7 @@ export class TimeUtilService {
     const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
 
     if (diffInDays > 0) {
-      return `${ diffInDays }  days`;
+      return `(${ diffInDays }  days)`;
     } else if (diffInHours > 0) {
       return `(${ diffInHours }  hours)`;
     } else {
