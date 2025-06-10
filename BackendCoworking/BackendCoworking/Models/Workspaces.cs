@@ -20,6 +20,10 @@ namespace BackendCoworking.Models
         [ForeignKey("CapacityId")]
         public virtual Capacity Capacity { get; set; } = null!;
 
+        public int CoworkingId { get; set; }
+        [ForeignKey("CoworkingId")]
+        public virtual Coworking Coworking { get; set; } = null!;
+
         // Many-to-many relationship with amenities
         public virtual ICollection<WorkspaceAmenitys> WorkspaceAmenities { get; set; } = new List<WorkspaceAmenitys>();
 
