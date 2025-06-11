@@ -10,6 +10,7 @@ namespace BackendCoworking.DatabaseSets
         {
         }
 
+        public DbSet<Coworking> Coworkings { get; set; }
         public DbSet<Workspaces> Workspaces { get; set; }
         public DbSet<Capacity> Capacities { get; set; }
         public DbSet<Amenities> Amenities { get; set; }
