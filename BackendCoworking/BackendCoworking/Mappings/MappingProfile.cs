@@ -14,6 +14,9 @@ namespace BackendCoworking.Mappings
             // Map from Amenities to AmenityDTO
             CreateMap<Amenities, AmenityDTO>();
 
+            // Map from Coworking to CoworkingDTO
+            CreateMap<Coworking, CoworkingDTO>();
+
             // Map from Workspaces to WorkspaceDTO
             CreateMap<Workspaces, WorkspaceDTO>()
                 .ForMember(dest => dest.Capacity, opt => opt.MapFrom(src => src.Capacity.CapacityTypeName))
@@ -32,6 +35,13 @@ namespace BackendCoworking.Mappings
             //    .ForMember(dest => dest.WorkspaceId, opt => opt.MapFrom(src => src.Workspace != null ? src.Workspace.Id : 0))
             //    .ForMember(dest => dest.AvailabilityId, opt => opt.MapFrom(src => src.Availability != null ? src.Availability.Id : 0));
 
+            // Map from Coworking to CoworkingDTO
+            CreateMap<Coworking, CoworkingDTO>()
+                .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))
+                .ForMember(dest => dest.Name, src => src.MapFrom(x => x.Name))
+                .ForMember(dest => dest.Description, src => src.MapFrom(x => x.Description))
+                .ForMember(dest => dest.Location, src => src.MapFrom(x => x.Location))
+                .ForMember(dest => dest.PhotoUrl, src => src.MapFrom(x => x.Photo.ImageUrl));
         }
     }
 }
