@@ -27,7 +27,9 @@ namespace BackendCoworking.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCoworkings()
         {
-            var coworkings = await _context.Coworkings.Include(c => c.Photo).ToListAsync();
+            var coworkings = await _context.Coworkings
+                .Include(c => c.Photo)
+                .ToListAsync();
             var coworkingDTOs = _mapper.Map<List<CoworkingDTO>>(coworkings);
             return Ok(coworkingDTOs);
         }

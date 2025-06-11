@@ -257,13 +257,6 @@ namespace BackendCoworking.Controllers
                     Message = successMessage,
                     BookingId = booking.Id
                 });
-
-                //return Created($"/bookings/{booking.Id}", new
-                //{
-                //    Success = true,
-                //    Message = successMessage,
-                //    BookingId = booking.Id
-                //});
             }
             catch (Exception ex)
             {

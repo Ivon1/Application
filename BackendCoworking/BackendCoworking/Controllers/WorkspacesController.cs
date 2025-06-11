@@ -38,5 +38,21 @@ namespace BackendCoworking.Controllers
             var workspaceDTOs = _mapper.Map<IEnumerable<WorkspaceDTO>>(workspaces);
             return Ok(workspaceDTOs);
         }
+
+        [HttpGet("GetWorkspacesByCoworkingId/{id:int}")]
+        public async Task<ActionResult<IEnumerable<WorkspaceDTO>>> GetWorkspacesByCoworkingId(int id)
+        {
+            var workspaces = await _context.Workspaces.Where(w => w.CoworkingId == id)
+                .Include(w => w.Capacity)
+                .Include(w => w.WorkspaceAmenities)
+                    .ThenInclude(wa => wa.Amenity)
+                .Include(w => w.WorkspacePhotos)
+                    .ThenInclude(wp => wp.Photo)
+                .Include(w => w.WorkspaceAvailabilitys)
+                    .ThenInclude(wa => wa.Availability)
+                .ToListAsync();
+            var workspacesDTOs = _mapper.Map<IEnumerable<WorkspaceDTO>> (workspaces);
+            return Ok(workspacesDTOs);
+        }
     }
 }
