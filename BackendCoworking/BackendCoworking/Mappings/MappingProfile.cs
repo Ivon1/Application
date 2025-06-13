@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BackendCoworking.Models;
 using BackendCoworking.Models.DTOs;
+using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BackendCoworking.Mappings
 {
@@ -30,19 +32,77 @@ namespace BackendCoworking.Mappings
                 .ForMember(dest => dest.Workspace, opt => opt.MapFrom(src => src.Workspace))
                 .ForMember(dest => dest.Availability, opt => opt.MapFrom(src => src.Availability));
 
-            //CreateMap<BookingDTO, Bookings>()
-            //    .ForMember(dest => dest.Workspace, opt => opt.Ignore())
-            //    .ForMember(dest => dest.Availability, opt => opt.Ignore())
-            //    .ForMember(dest => dest.WorkspaceId, opt => opt.MapFrom(src => src.Workspace != null ? src.Workspace.Id : 0))
-            //    .ForMember(dest => dest.AvailabilityId, opt => opt.MapFrom(src => src.Availability != null ? src.Availability.Id : 0));
-
             // Map from Coworking to CoworkingDTO
             CreateMap<Coworking, CoworkingDTO>()
                 .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))
                 .ForMember(dest => dest.Name, src => src.MapFrom(x => x.Name))
                 .ForMember(dest => dest.Description, src => src.MapFrom(x => x.Description))
                 .ForMember(dest => dest.Location, src => src.MapFrom(x => x.Location))
-                .ForMember(dest => dest.PhotoUrl, src => src.MapFrom(x => x.Photo.ImageUrl));
+                .ForMember(dest => dest.PhotoUrl, src => src.MapFrom(x => x.Photo.ImageUrl))
+                .ForMember(dest => dest.AvailabilitySummary, src => src.MapFrom(x => GetAvailabilitySummary(x)));
+        }
+
+        private string GetAvailabilitySummary(Coworking coworking)
+        {
+            int privateRooms = 0;
+            int desks = 0;
+            int meetingRooms = 0;
+            string summary = "";
+
+            var workspaces = coworking.Workspaces;
+
+            foreach(Workspaces workspace in workspaces)
+            {
+                workspace.WorkspaceAvailabilitys.ToList().ForEach(wa =>
+                {
+                    string availabilityName = wa.Availability.Name.ToLower();
+                    Match match = Regex.Match(availabilityName, @"(\d+)");
+                    
+                    if (match.Success)
+                    {
+                        int count = int.Parse(match.Groups[1].Value);
+                        
+                        if (availabilityName.Contains("meeting rooms") || availabilityName.Contains("meeting room"))
+                        {
+                            meetingRooms += count;
+                        }
+                        else if (availabilityName.Contains("private rooms") || availabilityName.Contains("private room"))
+                        {
+                            privateRooms += count;
+                        }
+                        else if (availabilityName.Contains("desks") || availabilityName.Contains("desk"))
+                        {
+                            desks += count;
+                        }
+                        else if (availabilityName.Contains("rooms") || availabilityName.Contains("room"))
+                        {
+                            if (!availabilityName.Contains("no"))
+                            {
+                                privateRooms += count;
+                            }
+                        }
+                    }
+                });
+            }
+            var summaryParts = new List<string>();
+            
+            if (desks > 0)
+            {
+                summaryParts.Add($"🪑 {desks} desks");
+            }
+            
+            if (privateRooms > 0)
+            {
+                summaryParts.Add($"🔒 {privateRooms} private rooms");
+            }
+            
+            if (meetingRooms > 0)
+            {
+                summaryParts.Add($"👥 {meetingRooms} meeting rooms");
+            }
+            
+            summary = string.Join(" · ", summaryParts);
+            return summary;
         }
     }
 }

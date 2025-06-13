@@ -29,9 +29,14 @@ namespace BackendCoworking.Controllers
         {
             var coworkings = await _context.Coworkings
                 .Include(c => c.Photo)
+                .Include(c => c.Workspaces)
+                    .ThenInclude(c => c.WorkspaceAvailabilitys)
+                        .ThenInclude(wa => wa.Availability)
                 .ToListAsync();
             var coworkingDTOs = _mapper.Map<List<CoworkingDTO>>(coworkings);
             return Ok(coworkingDTOs);
         }
+
+
     }
 }
