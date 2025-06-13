@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Location, CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -44,18 +44,22 @@ export class BookingFormComponent implements OnInit {
     pageTitle = 'Book your workspace';
 
     constructor(private location: Location) {
-        this.workspaces$ = this.workspaceService.getAllWorkspaces();
+        // this.workspaces$ = this.workspaceService.getAllWorkspaces();
     }
 
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
             const id = params.get('id');
+            const coworkingId = params.get('coworkingId');
             if (id) {
                 this.isEditMode = true;
                 this.bookingId = parseInt(id, 10);
                 this.pageTitle = 'Edit your booking';
                 this.loadBookingData(this.bookingId);
+            } else if (coworkingId) {
+                this.workspaces$ = this.workspaceService.getWorkspacesByCoworkingId(parseInt(coworkingId));
             }
+
         });
     }
 

@@ -69,11 +69,11 @@ builder.Services.AddDbContext<CoworkingContextData>(
             photos.Add(new Photos { Id = 11, ImageUrl = "https://i.ibb.co/Kcp542h2/0fa6936c82bab3a7caab82b4c277f6a732667f5a.png" });
 
             // Coworking photos
-            photos.Add(new Photos { Id = 12, ImageUrl = "https://ibb.co/VKY3BQz" }); // WorkClub Pechersk
-            photos.Add(new Photos { Id = 13, ImageUrl = "https://ibb.co/QFrdDDtN" }); // UrbanSpace Podil
-            photos.Add(new Photos { Id = 14, ImageUrl = "https://ibb.co/RpXLQ9DR" }); // Creative Hub Lvivska
-            photos.Add(new Photos { Id = 15, ImageUrl = "https://ibb.co/jPW20FPy" }); // TechNest Olimpiiska
-            photos.Add(new Photos { Id = 16, ImageUrl = "https://ibb.co/wrK3j5Wt" }); // Hive Station Troieshchyna
+            photos.Add(new Photos { Id = 12, ImageUrl = "https://i.ibb.co/PSGtC9P/Pechersk.jpg" }); // WorkClub Pechersk
+            photos.Add(new Photos { Id = 13, ImageUrl = "https://i.ibb.co/8DyFP071/podil.jpg" }); // UrbanSpace Podil 
+            photos.Add(new Photos { Id = 14, ImageUrl = "https://i.ibb.co/vvJgR0P9/lvivska.jpg" }); // Creative Hub Lvivska 
+            photos.Add(new Photos { Id = 15, ImageUrl = "https://i.ibb.co/hJZjQvJB/olimpiska.jpg" }); // TechNest Olimpiiska 
+            photos.Add(new Photos { Id = 16, ImageUrl = "https://i.ibb.co/vxZYXXRP/troya.jpg" }); // Hive Station Troieshchyna 
 
             context.Set<Photos>().AddRange(photos);
 
@@ -345,11 +345,11 @@ builder.Services.AddDbContext<CoworkingContextData>(
         photos.Add(new Photos { Id = 11, ImageUrl = "https://i.ibb.co/Kcp542h2/0fa6936c82bab3a7caab82b4c277f6a732667f5a.png" });
 
         // Coworking photos
-        photos.Add(new Photos { Id = 12, ImageUrl = "https://ibb.co/VKY3BQz" }); // WorkClub Pechersk
-        photos.Add(new Photos { Id = 13, ImageUrl = "https://ibb.co/QFrdDDtN" }); // UrbanSpace Podil
-        photos.Add(new Photos { Id = 14, ImageUrl = "https://ibb.co/RpXLQ9DR" }); // Creative Hub Lvivska
-        photos.Add(new Photos { Id = 15, ImageUrl = "https://ibb.co/jPW20FPy" }); // TechNest Olimpiiska
-        photos.Add(new Photos { Id = 16, ImageUrl = "https://ibb.co/wrK3j5Wt" }); // Hive Station Troieshchyna
+        photos.Add(new Photos { Id = 12, ImageUrl = "https://i.ibb.co/PSGtC9P/Pechersk.jpg" }); // WorkClub Pechersk
+        photos.Add(new Photos { Id = 13, ImageUrl = "https://i.ibb.co/8DyFP071/podil.jpg" }); // UrbanSpace Podil 
+        photos.Add(new Photos { Id = 14, ImageUrl = "https://i.ibb.co/vvJgR0P9/lvivska.jpg" }); // Creative Hub Lvivska 
+        photos.Add(new Photos { Id = 15, ImageUrl = "https://i.ibb.co/hJZjQvJB/olimpiska.jpg" }); // TechNest Olimpiiska 
+        photos.Add(new Photos { Id = 16, ImageUrl = "https://i.ibb.co/vxZYXXRP/troya.jpg" }); // Hive Station Troieshchyna 
 
         await context.Set<Photos>().AddRangeAsync(photos, cancellationToken);
 

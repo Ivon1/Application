@@ -51,6 +51,7 @@ namespace BackendCoworking.Controllers
                 .Include(w => w.WorkspaceAvailabilitys)
                     .ThenInclude(wa => wa.Availability)
                 .ToListAsync();
+
             var workspacesDTOs = _mapper.Map<IEnumerable<WorkspaceDTO>> (workspaces);
             return Ok(workspacesDTOs);
         }

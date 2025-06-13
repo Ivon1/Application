@@ -9,5 +9,6 @@
         public List<AmenityDTO> Amenities { get; set; } = new List<AmenityDTO>();
         public List<string> PhotoUrls { get; set; } = new List<string>();
         public List<AvailabilityDTO> Availabilities { get; set; } = new List<AvailabilityDTO>();
+        public int CoworkingId { get; set; }
     }
 }
