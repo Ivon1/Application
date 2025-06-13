@@ -18,4 +18,8 @@ export class CoworkingsPageComponent {
   coworkingService: CoworkingService = inject(CoworkingService);
 
   constructor() { this.coworkings$ = this.coworkingService.getCoworkings(); }
+
+  refreshList(): void {
+    this.coworkings$ = this.coworkingService.getCoworkings();
+  }
 }

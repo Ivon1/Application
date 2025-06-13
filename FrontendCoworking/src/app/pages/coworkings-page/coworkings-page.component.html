@@ -4,8 +4,18 @@
     <p >Browse and choose a workspace that fits your needs</p>
 
     @if (coworkings$ | async; as coworking) {
-        @for (coworking of coworking; track $index) {
-            <app-coworking-card [coworking]="coworking"></app-coworking-card>
+        @if(coworking.length === 0) {
+            <div class="container empty-coworking-container">
+                <img src="assets/Icons/laptopandmen.png" class="empty-coworking-container__image"/>
+                <div class="empty-coworking-container__title">No coworking spaces available at the moment</div>
+                <div class="empty-coworking-container__subtitle">Please check back later or try adjusting your filters</div>
+                <button class="btn btn-primary" (click)="refreshList()">Refresh list</button>
+            </div>
+        } 
+        @else {
+            @for (coworking of coworking; track $index) {
+                <app-coworking-card [coworking]="coworking"></app-coworking-card>
+            }
         }
     } @else {
         <div class="text-center my-5">

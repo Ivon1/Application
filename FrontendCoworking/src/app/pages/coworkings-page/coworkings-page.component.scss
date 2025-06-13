@@ -5,3 +5,41 @@ p {
     color: #6B6B6B;
     margin-top: 16px;
 }
+
+.empty-coworking-container {
+    background-color: var(--background-color);
+    border-radius: 20px;
+    margin-top: 44px;
+    height: 476px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.empty-coworking-container__image {
+    width: 36px;
+    height: 36px;
+}
+
+.empty-coworking-container__title {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 120%;
+    color: var(--text-color);
+    margin-top: 32px;
+}
+
+.empty-coworking-container__subtitle {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text-color);
+    margin-top: 16px;
+}
+
+.btn-primary {
+    width: 200px;
+    height: 48px;
+    margin-top: 32px;
+}
