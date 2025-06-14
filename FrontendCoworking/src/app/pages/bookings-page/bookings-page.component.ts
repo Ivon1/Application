@@ -6,7 +6,6 @@ import { BookingInterface } from '../../data/interfaces/booking-interface';
 import { BookingService } from '../../data/services/booking.service';
 import { BookingCardComponent } from "../../common-ui/booking-card/booking-card.component";
 
-
 @Component({
   selector: 'app-bookings-page',
   imports: [CommonModule, BookingCardComponent, RouterLink],
