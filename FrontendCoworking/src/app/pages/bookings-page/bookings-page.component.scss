@@ -102,3 +102,23 @@
         }
     }
 }
+
+.ai-assistant__container {
+    width: 1280px;
+    gap: 24px;
+    border-radius: 8px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg-color);
+}
+
+.ai-assistant__response {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 24px;
+}
+
+.ai-assistant__questions-subtitle {
+    margin-top: 44px;
+}

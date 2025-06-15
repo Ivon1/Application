@@ -12,6 +12,7 @@ string CORSOpenPolicy = "OpenCORSPolicy";
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 // Configure Cors
 builder.Services.AddCors(options =>

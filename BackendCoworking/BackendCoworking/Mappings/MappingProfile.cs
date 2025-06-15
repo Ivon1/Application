@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BackendCoworking.Models;
 using BackendCoworking.Models.DTOs;
+using BackendCoworking.Models.DTOs.GroqDTOs;
 using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -18,6 +19,9 @@ namespace BackendCoworking.Mappings
 
             // Map from Coworking to CoworkingDTO
             CreateMap<Coworking, CoworkingDTO>();
+
+            // Map from Booking to BookingGroqRequest
+            CreateMap<Bookings, BookingGroqRequest>();
 
             // Map from Workspaces to WorkspaceDTO
             CreateMap<Workspaces, WorkspaceDTO>()
@@ -40,6 +44,16 @@ namespace BackendCoworking.Mappings
                 .ForMember(dest => dest.Location, src => src.MapFrom(x => x.Location))
                 .ForMember(dest => dest.PhotoUrl, src => src.MapFrom(x => x.Photo.ImageUrl))
                 .ForMember(dest => dest.AvailabilitySummary, src => src.MapFrom(x => GetAvailabilitySummary(x)));
+
+            // Map from Booking to BookingGroqRequest
+            CreateMap<Bookings, BookingGroqRequest>()
+                .ForMember(dest => dest.CoworkingName, src => src.MapFrom(x => x.Workspace.Coworking.Name))
+                .ForMember(dest => dest.WorkspaceName, src => src.MapFrom(x => x.Workspace.WorksapceTypeName))
+                .ForMember(dest => dest.AvailabilityName, src => src.MapFrom(x => x.Availability.Name))
+                .ForMember(dest => dest.StartDate, src => src.MapFrom(x => x.StartDate))
+                .ForMember(dest => dest.EndDate, src => src.MapFrom(x => x.EndDate))
+                .ForMember(dest => dest.CoworkingDescription, src => src.MapFrom(x => x.Workspace.Coworking.Description))
+                .ForMember(dest => dest.CoworkingLocation, src => src.MapFrom(x => x.Workspace.Coworking.Location));
         }
 
         private string GetAvailabilitySummary(Coworking coworking)
