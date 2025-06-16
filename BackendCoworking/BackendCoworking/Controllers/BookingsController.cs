@@ -206,6 +206,27 @@ namespace BackendCoworking.Controllers
                     });
                 }
 
+                // Check if booking dates are in future 
+                if(bookingDto.StartDate < DateTime.UtcNow || bookingDto.EndDate < DateTime.UtcNow)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Booking dates must be in the future"
+                    });
+                }
+
+                // Check if start date and end date are not more than 30 days apart
+                if ((bookingDto.EndDate - bookingDto.StartDate).TotalDays > 30)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Booking duration cannot exceed 30 days"
+                    });
+                }
+
+
                 // Convert local dates to UTC dates
                 DateTime startDateUtc = DateTime.SpecifyKind(bookingDto.StartDate.ToUniversalTime(), DateTimeKind.Utc);
                 DateTime endDateUtc = DateTime.SpecifyKind(bookingDto.EndDate.ToUniversalTime(), DateTimeKind.Utc);
@@ -375,6 +396,26 @@ namespace BackendCoworking.Controllers
                     {
                         Success = false,
                         Message = "Valid availability is required"
+                    });
+                }
+
+                // Check if booking dates are in future 
+                if (bookingDTO.StartDate < DateTime.UtcNow || bookingDTO.EndDate < DateTime.UtcNow)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Booking dates must be in the future"
+                    });
+                }
+
+                // Check if start date and end date are not more than 30 days apart
+                if ((bookingDTO.EndDate - bookingDTO.StartDate).TotalDays > 30)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        Message = "Booking duration cannot exceed 30 days"
                     });
                 }
 

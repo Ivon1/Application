@@ -11,6 +11,8 @@ import { BookingService } from '../../data/services/booking.service';
 import { BookingInterface } from '../../data/interfaces/booking-interface';
 import { TimeUtilService } from '../../data/services/time-util.service';
 import { ActivatedRoute } from '@angular/router';
+import { Dialog } from '@angular/cdk/dialog';
+import { BookingModalInfoComponent } from '../../common-ui/booking-modal-info/booking-modal-info.component';
 
 @Component({
     selector: 'app-booking-form',
@@ -43,6 +45,14 @@ export class BookingFormComponent implements OnInit {
     bookingId: number | null = null;
     pageTitle = 'Book your workspace';
 
+    //Modal window
+    private dialog = inject(Dialog);
+    protected openModal(success: boolean, coworkingId?: number, message?: string) {
+        this.dialog.open<string>(BookingModalInfoComponent, {
+            data: { success: success, coworkingId: coworkingId, message: message }
+        });
+    }
+
     constructor(private location: Location) {
         // this.workspaces$ = this.workspaceService.getAllWorkspaces();
     }
@@ -51,12 +61,14 @@ export class BookingFormComponent implements OnInit {
         this.route.paramMap.subscribe(params => {
             const id = params.get('id');
             const coworkingId = params.get('coworkingId');
+            console.log('coworkingId:', coworkingId);
             if (id) {
                 this.isEditMode = true;
                 this.bookingId = parseInt(id, 10);
                 this.pageTitle = 'Edit your booking';
                 this.loadBookingData(this.bookingId);
-            } else if (coworkingId) {
+            } 
+            else if (coworkingId) {
                 this.workspaces$ = this.workspaceService.getWorkspacesByCoworkingId(parseInt(coworkingId));
             }
 
@@ -96,6 +108,7 @@ export class BookingFormComponent implements OnInit {
             next: (booking) => {
                 if (booking) {
                     this.selectedWorkspace = booking.workspace;
+                    this.workspaces$ = this.workspaceService.getWorkspacesByCoworkingId(booking.workspace?.coworkingId || -1);
                     console.log('selected availability:', booking.availability?.name);
 
                     const startTime = booking.startDate ?
@@ -176,20 +189,19 @@ export class BookingFormComponent implements OnInit {
             if (this.isEditMode) {
                 this.bookingService.updateBooking(booking).subscribe({
                     next: (response: any) => {
-                        alert(response.message);
+                        this.openModal(true, booking.workspace?.coworkingId, response.message);
                     },
                     error: (error) => {
-                        alert('Error updating booking: ' + error.message);
+                        this.openModal(false, booking.workspace?.coworkingId, error.error?.message);
                     }
                 });
             } else {
                 this.bookingService.createBooking(booking).subscribe({
                     next: (response: any) => {
-                        console.log('Booking created successfully:', response);
-                        alert(response.message);
+                        this.openModal(true, booking.workspace?.coworkingId, response.message);
                     },
                     error: (error) => {
-                        console.error('Error creating booking:', error);
+                        this.openModal(false, booking.workspace?.coworkingId, error.error?.message);
                     }
                 });
             }

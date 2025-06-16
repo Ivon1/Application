@@ -1,0 +1,35 @@
+<div class="modal-window-choice__container container">
+    <div class="row">
+        <div class="col-6 d-flex justify-content-start">
+            @if (actionType == 'delete') {
+                <img src="assets/Icons/delete.png" alt="Booking status" class="modal-window-choice__icon">
+            }
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+            <button type="button" class="modal-window-choice__close-button" aria-label="Close"
+                (click)="closeModal()">
+                <img src="assets/Icons/close-btn-icon.png" alt="Close Modal" class="modal-window-choice__close-icon">
+            </button>
+        </div>
+
+        <div class="modal-window-choice__title">
+            Cancel your booking?
+        </div>
+
+        <div class="modal-window-choice__message">
+            This action cannot be undone
+        </div>
+
+        @if(actionType == 'delete') {
+            <div class="row justify-content-center" style="margin-top: 32px;">
+                <div class="col-6">
+                    <button class="btn btn-outline w-100" (click)="confirmCancellation()">Yes, cancel it</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-primary m-0 p-0 w-100" (click)="closeModal()">No, keep it</button>
+                </div>
+            </div>
+            
+        }
+    </div>
+</div>

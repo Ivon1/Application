@@ -21,7 +21,6 @@
 
                     }
                 }
-                <!-- {{ booking?.workspace?.worksapceTypeName }} for {{ booking?.availability?.name }} -->
             </div>
 
             <div class="booking-card__time-info-container d-flex align-items-center justify-content-start">
@@ -51,7 +50,7 @@
                     [routerLink]="['/bookingform', booking?.id]">
                 </a>
 
-                <button class="btn btn-outline-danger booking-card__action-button" (click)="deleteBooking()">
+                <button class="btn btn-outline-danger booking-card__action-button" (click)="openModal('delete')">
                     <img src="assets/Icons/trash.png" alt="Delete Booking" class="booking-card__action-icon">
                 </button>
             </div>

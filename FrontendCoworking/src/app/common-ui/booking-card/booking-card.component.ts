@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { BookingInterface } from '../../data/interfaces/booking-interface';
 import { TimeUtilService } from '../../data/services/time-util.service';
 import { BookingService } from '../../data/services/booking.service';
+import { Dialog } from '@angular/cdk/dialog';
+import { BookingModalChoiceComponent } from '../booking-modal-choice/booking-modal-choice.component';
 
 
 @Component({
@@ -18,14 +20,26 @@ export class BookingCardComponent {
     timeService: TimeUtilService = inject(TimeUtilService);
     bookingService: BookingService = inject(BookingService);
 
-    deleteBooking(): void {
+
+    private dialog = inject(Dialog);
+    protected openModal(actionType: string) {
+        const dialogRef = this.dialog.open<{confirm: boolean}>(BookingModalChoiceComponent, {
+            data: { actionType: actionType },
+        });
+
+        dialogRef.closed.subscribe(result => {
+            if (result && result.confirm === true) {
+                this.deleteBooking();
+            }
+        });
+    }
+
+    private deleteBooking(): void {
         if (!this.booking || !this.booking.id) {
             return;
         }
 
-        if (confirm('Are you sure you want to delete this booking?')) {
-            console.log('Deleting booking with ID:', this.booking.id);
-            this.bookingService.deleteBooking(this.booking.id).subscribe({
+        this.bookingService.deleteBooking(this.booking.id).subscribe({
                 next: () => {
                     console.log('Booking deleted successfully');
                 },
@@ -35,7 +49,6 @@ export class BookingCardComponent {
             });
 
             window.location.reload();
-        }
     }
 
     getFormattedAmountBookedFor(bookedFor: string | null): string {

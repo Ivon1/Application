@@ -1,0 +1,28 @@
+<div class="modal-window__container container">
+    <div class="row">
+        <div class="col-6 d-flex justify-content-start">
+            <img [src]="success ? 'assets/Icons/success-icon.png' : 'assets/Icons/fail-icon.png'"
+                alt="Booking status" class="modal-window__icon">
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+            <button type="button" class="modal-window__close-button" aria-label="Close"
+                (click)="closeModal()">
+                <img src="assets/Icons/close-btn-icon.png" alt="Close Modal" class="modal-window__close-icon">
+            </button>
+        </div>
+
+        <div class="modal-window__title">
+            {{ success ? 'You\'re all set!' : 'Selected time is not available' }}
+        </div>
+
+        <div class="modal-window__message">
+            {{ message }}
+        </div>
+
+        <button class="btn btn-primary w-100" 
+            [routerLink]="success ? '/bookings' : '/coworkingsDetail/' + (coworkingId || '')"
+            (click)="closeModal()">
+            {{ success ? 'My bookings' : 'Check availability ' }}
+        </button>
+    </div>
+</div>
