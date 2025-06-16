@@ -9,4 +9,5 @@ export interface WorkspaceInterface {
     amenities: AmenityInterface[];
     photoUrls: string[];
     availabilities: AvailabilityInterface[];
+    coworkingId: number;
 }

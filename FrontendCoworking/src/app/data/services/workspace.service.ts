@@ -18,4 +18,8 @@ export class WorkspaceService {
   getAllWorkspaces() : Observable<WorkspaceInterface[]> { 
     return this.http.get<WorkspaceInterface[]>(this.baseUrl);
   }
+
+  getWorkspacesByCoworkingId(coworkingId: number) : Observable<WorkspaceInterface[]> { 
+    return this.http.get<WorkspaceInterface[]>(`${this.baseUrl}/GetWorkspacesByCoworkingId/${coworkingId}`);
+  }
 }

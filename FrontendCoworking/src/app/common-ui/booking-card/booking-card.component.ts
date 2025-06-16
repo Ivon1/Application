@@ -37,4 +37,20 @@ export class BookingCardComponent {
             window.location.reload();
         }
     }
+
+    getFormattedAmountBookedFor(bookedFor: string | null): string {
+        
+        const upToPattern = /for up to \d+ people/;
+        const match = bookedFor?.match(upToPattern);
+        if(match) {
+            return match[0];
+        } else {
+            const roomsForPattern = /for \d+ (person|people)/;
+            const roomsForMatch = bookedFor?.match(roomsForPattern);
+            if (roomsForMatch) {
+                return roomsForMatch[0];
+            }
+        }
+        return "";
+    }
 }

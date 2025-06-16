@@ -7,7 +7,21 @@
 
         <div class="col-md-7">
             <div class="booking-card__title align-content-start mt-md-0 mt-4">
-                {{ booking?.workspace?.worksapceTypeName }} for {{ booking?.workspace?.capacity }}
+                @switch (booking?.workspace?.worksapceTypeName) {
+                    @case ('Meeting rooms') {
+                        Meeting room {{ getFormattedAmountBookedFor(booking?.availability?.name ?? '') }}
+                    }
+                    @case ('Private rooms') {
+                        Private room {{ getFormattedAmountBookedFor(booking?.availability?.name ?? '') }}
+                    }
+                    @case ('Open space') {
+                        Open space
+                    }
+                    @default {
+
+                    }
+                }
+                <!-- {{ booking?.workspace?.worksapceTypeName }} for {{ booking?.availability?.name }} -->
             </div>
 
             <div class="booking-card__time-info-container d-flex align-items-center justify-content-start">
