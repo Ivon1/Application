@@ -21,31 +21,33 @@
         <span>Loading...</span>
     } 
 
-    <div class="ai-assistant-title">AI assistant</div>
+    <div class="w-100">
+        <div class="ai-assistant-title">AI assistant</div>
 
-    <div class="ai-assistant__container" *ngIf="userQuestion || isLoadingAiResponse || aiResponse">
-        <h3 *ngIf="userQuestion">{{ userQuestion }}</h3>
+        <div class="ai-assistant__container" *ngIf="userQuestion || isLoadingAiResponse || aiResponse">
+            <h3 *ngIf="userQuestion">{{ userQuestion }}</h3>
 
-        <div class="ai-assistant__response">
-            <span *ngIf="isLoadingAiResponse">Answering your question...</span>
-            <span *ngIf="!isLoadingAiResponse && aiResponse">{{ aiResponse }}</span>
+            <div class="ai-assistant__response">
+                <span *ngIf="isLoadingAiResponse">Answering your question...</span>
+                <span *ngIf="!isLoadingAiResponse && aiResponse">{{ aiResponse }}</span>
+            </div>
         </div>
-    </div>
 
-    <div class="ai-assistant__questions-subtitle">
-        {{ userQuestion ? 'Ask something else' : 'Example questions' }}
+        <div class="ai-assistant__questions-subtitle">
+            {{ userQuestion ? 'Ask something else' : 'Example questions' }}
+        </div>
+        <div class="ai-assistant__questions-container d-flex flex-lg-row flex-column">
+            <div class="ai-assistant__question" (click)="setQuestion('How many bookings do I have?')">How many bookings do I have?</div>
+            <div class="ai-assistant__question" (click)="setQuestion('What do I have booked for next week?')">What do I have booked for next week?</div>
+            <div class="ai-assistant__question" (click)="setQuestion('List all my private room bookings')">List all my private room bookings</div>
+        </div>
+        
+        <div class="ai-assistant__input-container">
+            <input type="text" class="form-text-input" placeholder="Ask anything..." [(ngModel)]="userInput">
+            <button class="btn btn-primary ai-assistant__input-button" 
+                    (click)="sendQuestion()">
+                <img src="assets/Icons/send.png" alt="">
+            </button>
+        <div>
     </div>
-    <div class="ai-assistant__questions-container d-flex flex-lg-row flex-column">
-        <div class="ai-assistant__question" (click)="setQuestion('How many bookings do I have?')">How many bookings do I have?</div>
-        <div class="ai-assistant__question" (click)="setQuestion('What do I have booked for next week?')">What do I have booked for next week?</div>
-        <div class="ai-assistant__question" (click)="setQuestion('List all my private room bookings')">List all my private room bookings</div>
-    </div>
-    
-    <div class="ai-assistant__input-container">
-        <input type="text" class="form-text-input" placeholder="Ask anything..." [(ngModel)]="userInput">
-        <button class="btn btn-primary ai-assistant__input-button" 
-                (click)="sendQuestion()">
-            <img src="assets/Icons/send.png" alt="">
-        </button>
-    <div>
 </div>
