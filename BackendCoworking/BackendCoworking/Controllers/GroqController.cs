@@ -71,7 +71,7 @@ namespace BackendCoworking.Controllers
                 }
             };
 
-            // Creating http request to Groq API
+            //Creating http request to Groq API
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
             var jsonContent = new StringContent(
@@ -96,6 +96,7 @@ namespace BackendCoworking.Controllers
                     .GetString();
 
                 return Ok(new { response = aiResponse });
+                //return Ok(systemPrompt);
             } 
             catch(Exception ex) { return BadRequest($"Error calling Groq API: {ex.Message}"); }
         }
@@ -105,33 +106,46 @@ namespace BackendCoworking.Controllers
             var prompt = new StringBuilder();
 
             prompt.AppendLine("You are a helpful coworking space assistant. " +
-                "Your task is to answer questions about user's bookings based on the following data:");
+                "Your task is to answer questions about user's bookings based EXCLUSIVELY on the following data:");
             prompt.AppendLine("## Strict Rules:");
-            prompt.AppendLine("1. NEVER add extra text like 'Here are your bookings' or 'Let me know...'");
-            prompt.AppendLine("Rules for formatting responses:");
-            prompt.AppendLine("1. Always use SINGULAR form for bookings (e.g., '1 room', '1 desk')");
-            prompt.AppendLine("2. Date format: 📅 MMMM dd, yyyy (e.g., 📅 May 18, 2025)");
-            prompt.AppendLine("3. Time format: HH:mm (e.g., 10:00 – 12:00)");
+            prompt.AppendLine("1. NEVER invent or generate additional bookings");
+            prompt.AppendLine("2. NEVER split a booking into multiple days - each booking is a SINGLE event");
+            prompt.AppendLine("3. ALWAYS use the EXACT dates and times provided");
+            prompt.AppendLine("4. NEVER add extra text like 'Here are your bookings' or 'Let me know...'");
+            prompt.AppendLine("5. ALWAYS use SINGULAR form: '1 room', '1 desk'");
+            prompt.AppendLine("6. Date format: 📅 MMMM dd, yyyy");
+            prompt.AppendLine("7. Time format: HH:mm (24-hour)");
+            prompt.AppendLine("8. Booking format: '📅 [Date] — [WorkspaceType] at [Location] ([StartTime] – [EndTime])'");
             prompt.AppendLine("4. If no bookings found for a date, respond: " +
                 "'You don't have any bookings on [date]'");
-            prompt.AppendLine("5. When listing bookings, use format: '📅 [Date] — [WorkspaceType] at [Location] ([StartTime] – [EndTime])'");
-            prompt.AppendLine("6. If multiple bookings: list each on separate line without additional text");
             prompt.AppendLine();
-            prompt.AppendLine("Current bookings:");
+            prompt.AppendLine("## Critical Instruction:");
+            prompt.AppendLine("Start Time and End Time take from StartDateTime and from EndDateTime");
+            prompt.AppendLine("Each booking below is a SINGLE event. Use the EXACT start date/time and end date/time as provided. DO NOT split into multiple days.");
+            prompt.AppendLine();
+            prompt.AppendLine("## Bookings Data:");
 
             foreach (var booking in bookings)
             {
-                prompt.AppendLine($"  Start DateTime: {booking.StartDate:MMMM dd, yyyy}");
-                prompt.AppendLine($"  End DateTime: {booking.EndDate:MMMM dd, yyyy}");
-                prompt.AppendLine($"  WorkspaceName: {booking.WorkspaceName}");
-                prompt.AppendLine($"  CoworkingName: {booking.CoworkingName}");
-                prompt.AppendLine($"  CoworkingDescription: {booking.CoworkingDescription}");
-                prompt.AppendLine($"  CoworkingLocation: {booking.CoworkingLocation}");
-                prompt.AppendLine($"  Availability: {booking.AvailabilityName}");
+                prompt.AppendLine($"  StartDate: {booking.StartDate.Date}");
+                prompt.AppendLine($"  StartTime: {booking.StartDate.ToString("hh:mm")}");
+                prompt.AppendLine($"  EndDate: {booking.EndDate.Date}");
+                prompt.AppendLine($"  EndTime: {booking.EndDate.ToString("hh:mm")}");
+                prompt.AppendLine($"  Workspace: {booking.WorkspaceName}");
+                prompt.AppendLine($"  Details: {booking.CoworkingDescription}");
+                prompt.AppendLine($"  Location: {booking.CoworkingName}");
+                prompt.AppendLine($"  Address: {booking.CoworkingLocation}");
                 prompt.AppendLine();
             }
 
-
+            //prompt.AppendLine("## Response Examples:");
+            //prompt.AppendLine("For the booking: July 13, 2025 12:00 to July 16, 2025 13:00");
+            //prompt.AppendLine("Correct: '📅 July 13, 2025 — Meeting room at WorkClub Pechersk (12:00 – 13:00)'");
+            //prompt.AppendLine("Incorrect: '📅 July 13, 2025 — Meeting room...' + '📅 July 14, 2025 — Meeting room...'");
+            //prompt.AppendLine();
+            //prompt.AppendLine("For the booking: February 04, 2026 09:00 to February 05, 2026 11:30");
+            //prompt.AppendLine("Correct: '📅 February 04, 2026 — Private room at WorkClub Pechersk (09:00 – 11:30)'");
+            //prompt.AppendLine("Incorrect any split across multiple days");
 
             return prompt.ToString();
         }

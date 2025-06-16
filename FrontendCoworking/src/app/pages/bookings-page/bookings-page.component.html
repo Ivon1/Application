@@ -27,12 +27,14 @@
         <h3 *ngIf="userQuestion">{{ userQuestion }}</h3>
 
         <div class="ai-assistant__response">
-            <span *ngIf="isLoadingAiResponse">Loading response...</span>
+            <span *ngIf="isLoadingAiResponse">Answering your question...</span>
             <span *ngIf="!isLoadingAiResponse && aiResponse">{{ aiResponse }}</span>
         </div>
     </div>
 
-    <div class="ai-assistant__questions-subtitle">Example questions</div>
+    <div class="ai-assistant__questions-subtitle">
+        {{ userQuestion ? 'Ask something else' : 'Example questions' }}
+    </div>
     <div class="ai-assistant__questions-container d-flex flex-lg-row flex-column">
         <div class="ai-assistant__question" (click)="setQuestion('How many bookings do I have?')">How many bookings do I have?</div>
         <div class="ai-assistant__question" (click)="setQuestion('What do I have booked for next week?')">What do I have booked for next week?</div>

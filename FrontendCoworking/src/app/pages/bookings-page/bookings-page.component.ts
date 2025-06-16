@@ -20,10 +20,10 @@ export class BookingsPageComponent {
     bookingService = inject(BookingService);
 
     groqService = inject(GroqService);
-    userQuestion: string = '';
-    userInput: string = '';
-    aiResponse: string = '';
-    isLoadingAiResponse: boolean = false;
+    userQuestion: string = ''; // For question user wants to ask
+    userInput: string = ''; // For input field binding
+    aiResponse: string = ''; // For AI response to the question 
+    isLoadingAiResponse: boolean = false; // Flag to show loading state
 
     constructor() {
         this.bookings$ = this.bookingService.getAllBookings();

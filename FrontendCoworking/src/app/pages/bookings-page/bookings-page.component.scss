@@ -117,8 +117,18 @@
     font-size: 16px;
     line-height: 24px;
     margin-top: 24px;
+    white-space: pre-line;
+    display: block;
+    p {
+        margin-top: 16px;
+        
+        &:first-child {
+            margin-top: 0;
+        }
+    }
 }
 
 .ai-assistant__questions-subtitle {
     margin-top: 44px;
 }
+
