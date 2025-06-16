@@ -189,7 +189,7 @@ export class BookingFormComponent implements OnInit {
                         this.openModal(true, booking.workspace?.coworkingId, response.message);
                     },
                     error: (error) => {
-                        this.openModal(false, booking.workspace?.coworkingId, error.message);
+                        this.openModal(false, booking.workspace?.coworkingId, error.error?.message);
                     }
                 });
             } else {
@@ -198,7 +198,7 @@ export class BookingFormComponent implements OnInit {
                         this.openModal(true, booking.workspace?.coworkingId, response.message);
                     },
                     error: (error) => {
-                        this.openModal(false, booking.workspace?.coworkingId, 'Please choose a different time slot');
+                        this.openModal(false, booking.workspace?.coworkingId, error.error?.message);
                     }
                 });
             }
