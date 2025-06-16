@@ -23,6 +23,7 @@ export class BookingCardComponent {
             return;
         }
 
+
         if (confirm('Are you sure you want to delete this booking?')) {
             console.log('Deleting booking with ID:', this.booking.id);
             this.bookingService.deleteBooking(this.booking.id).subscribe({
