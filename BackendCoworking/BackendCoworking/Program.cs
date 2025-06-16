@@ -271,7 +271,7 @@ builder.Services.AddDbContext<CoworkingContextData>(
                 // Basic workspace availabilities for each workspace type
 
                 // Open space availabilities
-                workspaceAvailabilities.Add(new WorkspaceAvailabilitys { WorkspaceId = baseWorkspaceId, AvailabilityId = 1 }); // 24 desks
+                //workspaceAvailabilities.Add(new WorkspaceAvailabilitys { WorkspaceId = baseWorkspaceId, AvailabilityId = 1 }); // 24 desks
 
                 // Private room availabilities
                 workspaceAvailabilities.Add(new WorkspaceAvailabilitys { WorkspaceId = baseWorkspaceId + 1, AvailabilityId = 2 }); // 7 rooms for 1 person
@@ -547,7 +547,7 @@ builder.Services.AddDbContext<CoworkingContextData>(
             // Basic workspace availabilities for each workspace type
 
             // Open space availabilities
-            workspaceAvailabilities.Add(new WorkspaceAvailabilitys { WorkspaceId = baseWorkspaceId, AvailabilityId = 1 }); // 24 desks
+            //workspaceAvailabilities.Add(new WorkspaceAvailabilitys { WorkspaceId = baseWorkspaceId, AvailabilityId = 1 }); // 24 desks
 
             // Private room availabilities
             workspaceAvailabilities.Add(new WorkspaceAvailabilitys { WorkspaceId = baseWorkspaceId + 1, AvailabilityId = 2 }); // 7 rooms for 1 person
