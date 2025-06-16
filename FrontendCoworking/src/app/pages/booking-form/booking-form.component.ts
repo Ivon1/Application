@@ -61,12 +61,14 @@ export class BookingFormComponent implements OnInit {
         this.route.paramMap.subscribe(params => {
             const id = params.get('id');
             const coworkingId = params.get('coworkingId');
+            console.log('coworkingId:', coworkingId);
             if (id) {
                 this.isEditMode = true;
                 this.bookingId = parseInt(id, 10);
                 this.pageTitle = 'Edit your booking';
                 this.loadBookingData(this.bookingId);
-            } else if (coworkingId) {
+            } 
+            else if (coworkingId) {
                 this.workspaces$ = this.workspaceService.getWorkspacesByCoworkingId(parseInt(coworkingId));
             }
 
@@ -106,6 +108,7 @@ export class BookingFormComponent implements OnInit {
             next: (booking) => {
                 if (booking) {
                     this.selectedWorkspace = booking.workspace;
+                    this.workspaces$ = this.workspaceService.getWorkspacesByCoworkingId(booking.workspace?.coworkingId || -1);
                     console.log('selected availability:', booking.availability?.name);
 
                     const startTime = booking.startDate ?
