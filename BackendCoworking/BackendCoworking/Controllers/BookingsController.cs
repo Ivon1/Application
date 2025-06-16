@@ -247,7 +247,7 @@ namespace BackendCoworking.Controllers
                 string startDateFormatted = bookingDto.StartDate.ToString("MMMM d, yyyy");
                 string endDateFormatted = bookingDto.EndDate.ToString("MMMM d, yyyy");
 
-                // Build a user-friendly success message
+                // Create success message
                 string successMessage = $"Your {workspace.WorksapceTypeName.ToLower()} for {workspace.Capacity.CapacityTypeName} is booked from {startDateFormatted} to {endDateFormatted}. A confirmation has been sent to your email {bookingDto.Email}.";
 
                 // Return success response with the formatted message

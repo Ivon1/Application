@@ -96,7 +96,6 @@ namespace BackendCoworking.Controllers
                     .GetString();
 
                 return Ok(new { response = aiResponse });
-                //return Ok(systemPrompt);
             } 
             catch(Exception ex) { return BadRequest($"Error calling Groq API: {ex.Message}"); }
         }
