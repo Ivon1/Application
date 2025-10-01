@@ -2,6 +2,7 @@
 using BackendCoworking.DatabaseSets;
 using BackendCoworking.Models;
 using BackendCoworking.Models.DTOs;
+using BackendCoworking.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -13,42 +14,18 @@ namespace BackendCoworking.Controllers
     [ApiController]
     [EnableCors("OpenCORSPolicy")]
     [Route("[controller]")]
-    public class BookingsController : Controller
+    public class BookingsController(BookingsService _bookingsService, CoworkingContextData _context) 
+        : Controller
     {
-        // Dependency injection for the database context and mapper
-        private readonly CoworkingContextData _context;
-        private readonly IMapper _mapper;
-
-        public BookingsController(CoworkingContextData context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
-
         // GET All Bookings
         [HttpGet]
         public async Task<IActionResult> GetBookings()
         {
             try
             {
-                var bookings = await _context.Bookings
-                    .Include(b => b.Workspace)
-                        .ThenInclude(b => b.Capacity)
-                    .Include(w => w.Workspace)
-                        .ThenInclude(w => w.WorkspaceAmenities)
-                            .ThenInclude(wa => wa.Amenity)
-                    .Include(w => w.Workspace)
-                        .ThenInclude(w => w.WorkspacePhotos)
-                            .ThenInclude(wp => wp.Photo)
-                    .Include(b => b.Workspace)
-                        .ThenInclude(w => w.WorkspaceAvailabilitys)
-                            .ThenInclude(wa => wa.Availability)
-                    .Include(b => b.Availability)
-                    .ToListAsync();
+                var bookingsDTo = await _bookingsService.GetAllBookingsAsync();
 
-                var bookingDtos = _mapper.Map<List<BookingDTO>>(bookings);
-
-                return Ok(bookingDtos);
+                return Ok(bookingsDTo);
             }
             catch (Exception ex)
             {
@@ -67,30 +44,8 @@ namespace BackendCoworking.Controllers
         {
             try
             {
-                var booking = await _context.Bookings
-                    .Include(b => b.Workspace)
-                        .ThenInclude(b => b.Capacity)
-                    .Include(w => w.Workspace)
-                        .ThenInclude(w => w.WorkspaceAmenities)
-                            .ThenInclude(wa => wa.Amenity)
-                    .Include(w => w.Workspace)
-                        .ThenInclude(w => w.WorkspacePhotos)
-                            .ThenInclude(wp => wp.Photo)
-                    .Include(b => b.Workspace)
-                        .ThenInclude(w => w.WorkspaceAvailabilitys)
-                            .ThenInclude(wa => wa.Availability)
-                    .Include(b => b.Availability)
-                    .FirstOrDefaultAsync(b => b.Id == id);
+                var bookingDto = await _bookingsService.GetBookingById(id);
 
-                if (booking == null)
-                {
-                    return NotFound(new
-                    {
-                        Success = false,
-                        Message = $"Booking with ID {id} not found"
-                    });
-                }
-                var bookingDto = _mapper.Map<BookingDTO>(booking);
                 return Ok(bookingDto);
             }
             catch (Exception ex)
@@ -108,6 +63,38 @@ namespace BackendCoworking.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingDTO bookingDto)
         {
+            //try
+            //{
+            //    var (isCreated, message) = await _bookingsService.CreateBookingAsync(bookingDto);
+
+            //    if (isCreated)
+            //    {
+            //        return Ok(new
+            //        {
+            //            Success = true,
+            //            Message = message
+            //        });
+            //    }
+            //    else
+            //    {
+            //        return BadRequest(new
+            //        {
+            //            Success = false,
+            //            Message = message
+            //        });
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, new
+            //    {
+            //        Success = false,
+            //        Message = ex.Message,
+            //        Error = ex.Message
+            //    });
+            //}
+
+
             try
             {
                 // Validate input
@@ -207,7 +194,7 @@ namespace BackendCoworking.Controllers
                 }
 
                 // Check if booking dates are in future 
-                if(bookingDto.StartDate < DateTime.UtcNow || bookingDto.EndDate < DateTime.UtcNow)
+                if (bookingDto.StartDate < DateTime.UtcNow || bookingDto.EndDate < DateTime.UtcNow)
                 {
                     return BadRequest(new
                     {
@@ -296,9 +283,9 @@ namespace BackendCoworking.Controllers
         {
             try
             {
-                // Find the booking by ID
-                var booking = await _context.Bookings.FindAsync(id);
-                if (booking == null)
+                bool deleteBookingResult = await _bookingsService.DeleteBookingById(id);
+
+                if(!deleteBookingResult)
                 {
                     return NotFound(new
                     {
@@ -306,16 +293,13 @@ namespace BackendCoworking.Controllers
                         Message = $"Booking with ID {id} not found"
                     });
                 }
-
-                // Remove the booking from the database
-                _context.Bookings.Remove(booking);
-                await _context.SaveChangesAsync();
                 return Ok(new
                 {
                     Success = true,
                     Message = $"Booking with ID {id} has been successfully deleted"
                 });
-            }
+
+            } 
             catch (Exception ex)
             {
                 return StatusCode(500, new
@@ -325,6 +309,38 @@ namespace BackendCoworking.Controllers
                     Error = ex.Message
                 });
             }
+
+            //try
+            //{
+            //    // Find the booking by ID
+            //    var booking = await _context.Bookings.FindAsync(id);
+            //    if (booking == null)
+            //    {
+            //        return NotFound(new
+            //        {
+            //            Success = false,
+            //            Message = $"Booking with ID {id} not found"
+            //        });
+            //    }
+
+            //    // Remove the booking from the database
+            //    _context.Bookings.Remove(booking);
+            //    await _context.SaveChangesAsync();
+            //    return Ok(new
+            //    {
+            //        Success = true,
+            //        Message = $"Booking with ID {id} has been successfully deleted"
+            //    });
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, new
+            //    {
+            //        Success = false,
+            //        Message = "An error occurred while deleting the booking",
+            //        Error = ex.Message
+            //    });
+            //}
         }
 
         // PUT Update Booking

@@ -1,42 +1,23 @@
-﻿using AutoMapper;
-using BackendCoworking.DatabaseSets;
-using BackendCoworking.Models.DTOs;
+﻿using BackendCoworking.Services;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BackendCoworking.Controllers
 {
     [ApiController]
     [EnableCors("OpenCORSPolicy")]
     [Route("[controller]")]
-    public class CoworkingController : ControllerBase
+    public class CoworkingController(CoworkingService _coworkingService) : ControllerBase
     {
-        // Dependency injection for the database context and mapper
-        private readonly CoworkingContextData _context;
-        private readonly IMapper _mapper;
-
-        public CoworkingController(CoworkingContextData context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetAllCoworkings()
         {
-            var coworkings = await _context.Coworkings
-                .Include(c => c.Photo)
-                .Include(c => c.Workspaces)
-                    .ThenInclude(c => c.WorkspaceAvailabilitys)
-                        .ThenInclude(wa => wa.Availability)
-                .ToListAsync();
-            var coworkingDTOs = _mapper.Map<List<CoworkingDTO>>(coworkings);
-            return Ok(coworkingDTOs);
+            var coworkings = await _coworkingService.GetAllCoworkingsAsync();
+            if (coworkings == null || !coworkings.Any())
+            {
+                return NotFound("No coworkings found.");
+            }
+            return Ok(coworkings);
         }
-
-
     }
 }
