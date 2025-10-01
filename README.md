@@ -12,45 +12,38 @@ The project is organized into two main folders:
 ![Coworking Spaces Page](https://github.com/Ivon1/Application/blob/develop/screenshots/coworking-spaces.png?raw=true)
 *Browse available coworking spaces with location and availability information*
 
-### Individual Coworking Details
-![Coworking Details Page]("")
-*View detailed information about workspace types, amenities, and capacity options*
-
 ### Workspace Selection
-![Workspace Selection]("")
+![Workspace Selection](https://github.com/Ivon1/Application/blob/develop/screenshots/workspace-selection.png?raw=true)
 *Choose from different workspace types including meeting rooms, private rooms, and open spaces*
 
 ### Booking Form
-![New Booking Form]("")
+![New Booking Form](https://github.com/Ivon1/Application/blob/develop/screenshots/booking-form.png?raw=true)
 *Create a new booking with date/time selection and workspace preferences*
 
-![Edit Booking Form]("")
+![Edit Booking Form](https://github.com/Ivon1/Application/blob/develop/screenshots/edit-booking-form.png?raw=true)
 *Edit existing bookings with pre-filled information*
 
 ### My Bookings
-![Bookings Overview]("")
+![Bookings Overview](https://github.com/Ivon1/Application/blob/develop/screenshots/current-bookings.png?raw=true)
 *View all your current and upcoming bookings*
 
-![Empty Bookings State]("")
+![Empty Bookings State](https://github.com/Ivon1/Application/blob/develop/screenshots/empty-bookings.png?raw=true)
 *User-friendly empty state when no bookings exist*
 
 ### AI Assistant
-![AI Assistant Interface]("")
+![AI Assistant Interface](https://github.com/Ivon1/Application/blob/develop/screenshots/integrated-ai-assistant.png?raw=true)
 *Get help with booking-related questions using the integrated AI assistant*
 
 ### Booking Management
-![Booking Actions]("")
+![Booking Actions](https://github.com/Ivon1/Application/blob/develop/screenshots/confirmation-modal-to-delete.png?raw=true)
 *Edit or cancel existing bookings with confirmation modals*
 
-![Booking Success Modal]("")
+![Booking Success Modal](https://github.com/Ivon1/Application/blob/develop/screenshots/successful-booking-creation.png?raw=true)
 *Confirmation modal after successful booking creation*
 
-![Booking Error Modal]("")
+![Booking Error Modal](https://github.com/Ivon1/Application/blob/develop/screenshots/conflicts-with-booking.png?raw=true)
 *Error handling for booking conflicts or issues*
 
-### Navigation
-![Navigation Bar]("")
-*Clean navigation between Coworkings and My Bookings sections*
 
 ### Setting up the Backend
 
@@ -93,5 +86,6 @@ The project is organized into two main folders:
 - **Rich UI Components**: Custom date pickers, time selectors, and image galleries
 
 - **Form Validation**: Comprehensive form validation for booking details
+
 
 
