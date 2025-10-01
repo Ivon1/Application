@@ -3,17 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { WorkspaceInterface } from '../interfaces/workspace-interface';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class WorkspaceService {
+export class WorkspaceService extends BaseService {
 
   http: HttpClient = inject(HttpClient);
-  private baseUrl: string = 'https://localhost:7201/Workspaces';
+  private baseUrl: string = this.apiUrl + '/workspaces';
 
-  constructor() { }
+  constructor() { super();  }
 
   getAllWorkspaces() : Observable<WorkspaceInterface[]> { 
     return this.http.get<WorkspaceInterface[]>(this.baseUrl);

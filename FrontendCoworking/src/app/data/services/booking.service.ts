@@ -2,15 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BookingInterface } from '../interfaces/booking-interface';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root'
 })
     
-export class BookingService  {
+export class BookingService  extends BaseService {
   http: HttpClient = inject(HttpClient);
-  baseUrl: string = 'https://localhost:7201/Bookings';
-  constructor() { }
+  baseUrl: string = this.apiUrl + '/bookings';
+  
+  constructor() { super(); }
 
   getAllBookings() : Observable<BookingInterface[]> {
     return this.http.get<BookingInterface[]>(`${this.baseUrl}`);
