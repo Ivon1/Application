@@ -2,8 +2,6 @@
 using BackendCoworking.Models;
 using BackendCoworking.Models.DTOs;
 using BackendCoworking.Models.DTOs.GroqDTOs;
-using System.Text.RegularExpressions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BackendCoworking.Mappings
 {
@@ -22,6 +20,9 @@ namespace BackendCoworking.Mappings
 
             // Map from Booking to BookingGroqRequest
             CreateMap<Bookings, BookingGroqRequest>();
+
+            // Map from BookingsDTO to Bookings
+            CreateMap<BookingDTO, Bookings>();
 
             // Map from Workspaces to WorkspaceDTO
             CreateMap<Workspaces, WorkspaceDTO>()
@@ -42,8 +43,7 @@ namespace BackendCoworking.Mappings
                 .ForMember(dest => dest.Name, src => src.MapFrom(x => x.Name))
                 .ForMember(dest => dest.Description, src => src.MapFrom(x => x.Description))
                 .ForMember(dest => dest.Location, src => src.MapFrom(x => x.Location))
-                .ForMember(dest => dest.PhotoUrl, src => src.MapFrom(x => x.Photo.ImageUrl))
-                .ForMember(dest => dest.AvailabilitySummary, src => src.MapFrom(x => GetAvailabilitySummary(x)));
+                .ForMember(dest => dest.PhotoUrl, src => src.MapFrom(x => x.Photo.ImageUrl));
 
             // Map from Booking to BookingGroqRequest
             CreateMap<Bookings, BookingGroqRequest>()
@@ -54,69 +54,16 @@ namespace BackendCoworking.Mappings
                 .ForMember(dest => dest.EndDate, src => src.MapFrom(x => x.EndDate))
                 .ForMember(dest => dest.CoworkingDescription, src => src.MapFrom(x => x.Workspace.Coworking.Description))
                 .ForMember(dest => dest.CoworkingLocation, src => src.MapFrom(x => x.Workspace.Coworking.Location));
-        }
 
-        private string GetAvailabilitySummary(Coworking coworking)
-        {
-            int privateRooms = 0;
-            int desks = 0;
-            int meetingRooms = 0;
-            string summary = "";
-
-            var workspaces = coworking.Workspaces;
-
-            foreach(Workspaces workspace in workspaces)
-            {
-                workspace.WorkspaceAvailabilitys.ToList().ForEach(wa =>
-                {
-                    string availabilityName = wa.Availability.Name.ToLower();
-                    Match match = Regex.Match(availabilityName, @"(\d+)");
-                    
-                    if (match.Success)
-                    {
-                        int count = int.Parse(match.Groups[1].Value);
-                        
-                        if (availabilityName.Contains("meeting rooms") || availabilityName.Contains("meeting room"))
-                        {
-                            meetingRooms += count;
-                        }
-                        else if (availabilityName.Contains("private rooms") || availabilityName.Contains("private room"))
-                        {
-                            privateRooms += count;
-                        }
-                        else if (availabilityName.Contains("desks") || availabilityName.Contains("desk"))
-                        {
-                            desks += count;
-                        }
-                        else if (availabilityName.Contains("rooms") || availabilityName.Contains("room"))
-                        {
-                            if (!availabilityName.Contains("no"))
-                            {
-                                privateRooms += count;
-                            }
-                        }
-                    }
-                });
-            }
-            var summaryParts = new List<string>();
-            
-            if (desks > 0)
-            {
-                summaryParts.Add($"🪑 {desks} desks");
-            }
-            
-            if (privateRooms > 0)
-            {
-                summaryParts.Add($"🔒 {privateRooms} private rooms");
-            }
-            
-            if (meetingRooms > 0)
-            {
-                summaryParts.Add($"👥 {meetingRooms} meeting rooms");
-            }
-            
-            summary = string.Join(" · ", summaryParts);
-            return summary;
+            //Map from BookingDTO to Bookings
+            CreateMap<BookingDTO, Bookings>()
+                .ForMember(dest => dest.Id, src => src.MapFrom(x => x.Id))
+                .ForMember(dest => dest.Name, src => src.MapFrom(x => x.Name))
+                .ForMember(dest => dest.Email, src => src.MapFrom(x => x.Email))
+                .ForMember(dest => dest.StartDate, src => src.MapFrom(x => x.StartDate))
+                .ForMember(dest => dest.EndDate, src => src.MapFrom(x => x.EndDate))
+                .ForMember(dest => dest.WorkspaceId, src => src.MapFrom(x => x.Workspace.Id))
+                .ForMember(dest => dest.AvailabilityId, src => src.MapFrom(x => x.Availability.Id));
         }
     }
 }

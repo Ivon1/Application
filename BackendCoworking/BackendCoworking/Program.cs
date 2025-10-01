@@ -1,7 +1,10 @@
 using AutoMapper;
+using BackendCoworking.BusinessLayer;
 using BackendCoworking.DatabaseSets;
 using BackendCoworking.Mappings;
 using BackendCoworking.Models;
+using BackendCoworking.Repositories;
+using BackendCoworking.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -13,6 +16,19 @@ string CORSOpenPolicy = "OpenCORSPolicy";
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
+
+// Configure Repositories 
+builder.Services.AddScoped<WorkspacesRepository>();
+builder.Services.AddScoped<CoworkingRepository>();
+builder.Services.AddScoped<BookingsRepository>();
+
+// Configure Services
+builder.Services.AddScoped<WorkspacesService>();
+builder.Services.AddScoped<CoworkingService>();
+builder.Services.AddScoped<BookingsService>();
+
+// Configure Business Rules
+builder.Services.AddScoped<BookingBussinesRules>();
 
 // Configure Cors
 builder.Services.AddCors(options =>
@@ -80,86 +96,81 @@ builder.Services.AddDbContext<CoworkingContextData>(
 
             // Add coworkings
             var coworkings = new List<Coworking>
-        {
-            new Coworking
             {
-                Id = 1,
-                Name = "WorkClub Pechersk",
-                Description = "Modern coworking in the heart of Pechersk with quiet rooms and coffee on tap.",
-                Location = "123 Yaroslaviv Val St, Kyiv",
-                PhotoId = 12
-            },
-            new Coworking
-            {
-                Id = 2,
-                Name = "UrbanSpace Podil",
-                Description = "A creative riverside hub ideal for freelancers and small startups.",
-                Location = "78 Naberezhno-Khreshchatytska St, Kyiv",
-                PhotoId = 13
-            },
-            new Coworking
-            {
-                Id = 3,
-                Name = "Creative Hub Lvivska",
-                Description = "A compact, design-focused space with open desks and strong community vibes.",
-                Location = "12 Lvivska Square, Kyiv",
-                PhotoId = 14
-            },
-            new Coworking
-            {
-                Id = 4,
-                Name = "TechNest Olimpiiska",
-                Description = "A high-tech space near Olimpiiska metro, perfect for team sprints and solo focus.",
-                Location = "45 Velyka Vasylkivska St, Kyiv",
-                PhotoId = 15
-            },
-            new Coworking
-            {
-                Id = 5,
-                Name = "Hive Station Troieshchyna",
-                Description = "A quiet, affordable option in the city's northeast—great for remote workers.",
-                Location = "102 Zakrevskogo St, Kyiv",
-                PhotoId = 16
-            }
-        };
+                new Coworking
+                {
+                    Id = 1,
+                    Name = "Dublin WorkHub",
+                    Description = "A modern coworking space in the heart of Dublin, offering a vibrant atmosphere for professionals.",
+                    Location = "123 St. Stephen's Green, Dublin",
+                    PhotoId = 12
+                },
+                new Coworking
+                {
+                    Id = 2,
+                    Name = "Galway Innovation Hub",
+                    Description = "A creative space by the sea, perfect for startups and freelancers.",
+                    Location = "78 Eyre Square, Galway",
+                    PhotoId = 13
+                },
+                new Coworking
+                {
+                    Id = 3,
+                    Name = "Cork Creative Space",
+                    Description = "A design-focused coworking hub with a strong community vibe.",
+                    Location = "12 Grand Parade, Cork",
+                    PhotoId = 14
+                },
+                new Coworking
+                {
+                    Id = 4,
+                    Name = "Limerick TechNest",
+                    Description = "A high-tech coworking space ideal for team sprints and solo focus.",
+                    Location = "45 O'Connell Street, Limerick",
+                    PhotoId = 15
+                },
+                new Coworking
+                {
+                    Id = 5,
+                    Name = "Waterford Hive",
+                    Description = "A quiet and affordable coworking option in the southeast of Ireland.",
+                    Location = "102 The Quay, Waterford",
+                    PhotoId = 16
+                }
+            };
             context.Set<Coworking>().AddRange(coworkings);
             context.SaveChanges();
 
             // Create workspaces for each coworking
             var workspaces = new List<Workspaces>();
 
-            // For each coworking, create the standard workspace types
             foreach (var coworking in coworkings)
             {
-                // Create base workspace ID for this coworking
                 int baseId = (coworking.Id - 1) * 3 + 1;
 
-                // Add Open space
                 workspaces.Add(new Workspaces
                 {
                     Id = baseId,
                     WorksapceTypeName = "Open space",
-                    Description = "A vibrant shared area perfect for freelancers or small teams who enjoy a collaborative atmosphere. Choose any available desk and get to work with flexibility and ease.",
+                    Description = "A shared area with flexible seating, ideal for networking and collaboration.",
                     CapacityId = 1,
                     CoworkingId = coworking.Id
                 });
 
-                // Add Private rooms
                 workspaces.Add(new Workspaces
                 {
                     Id = baseId + 1,
                     WorksapceTypeName = "Private rooms",
-                    Description = "Ideal for focused work, video calls, or small team huddles. These fully enclosed rooms offer privacy and come in a variety of sizes to fit your needs.",
+                    Description = "Enclosed rooms for focused work, video calls, or small team meetings.",
                     CapacityId = 2,
                     CoworkingId = coworking.Id
                 });
 
-                // Add Meeting rooms
                 workspaces.Add(new Workspaces
                 {
                     Id = baseId + 2,
                     WorksapceTypeName = "Meeting rooms",
-                    Description = "Designed for productive meetings, workshops, or client presentations. Equipped with screens, whiteboards, and comfortable seating to keep your sessions running smoothly.",
+                    Description = "Fully equipped rooms for productive meetings, workshops, or presentations.",
                     CapacityId = 4,
                     CoworkingId = coworking.Id
                 });
@@ -356,86 +367,81 @@ builder.Services.AddDbContext<CoworkingContextData>(
 
         // Add coworkings
         var coworkings = new List<Coworking>
-        {
-            new Coworking
             {
-                Id = 1,
-                Name = "WorkClub Pechersk",
-                Description = "Modern coworking in the heart of Pechersk with quiet rooms and coffee on tap.",
-                Location = "123 Yaroslaviv Val St, Kyiv",
-                PhotoId = 12
-            },
-            new Coworking
-            {
-                Id = 2,
-                Name = "UrbanSpace Podil",
-                Description = "A creative riverside hub ideal for freelancers and small startups.",
-                Location = "78 Naberezhno-Khreshchatytska St, Kyiv",
-                PhotoId = 13
-            },
-            new Coworking
-            {
-                Id = 3,
-                Name = "Creative Hub Lvivska",
-                Description = "A compact, design-focused space with open desks and strong community vibes.",
-                Location = "12 Lvivska Square, Kyiv",
-                PhotoId = 14
-            },
-            new Coworking
-            {
-                Id = 4,
-                Name = "TechNest Olimpiiska",
-                Description = "A high-tech space near Olimpiiska metro, perfect for team sprints and solo focus.",
-                Location = "45 Velyka Vasylkivska St, Kyiv",
-                PhotoId = 15
-            },
-            new Coworking
-            {
-                Id = 5,
-                Name = "Hive Station Troieshchyna",
-                Description = "A quiet, affordable option in the city's northeast—great for remote workers.",
-                Location = "102 Zakrevskogo St, Kyiv",
-                PhotoId = 16
-            }
-        };
+                new Coworking
+                {
+                    Id = 1,
+                    Name = "Dublin WorkHub",
+                    Description = "A modern coworking space in the heart of Dublin, offering a vibrant atmosphere for professionals.",
+                    Location = "123 St. Stephen's Green, Dublin",
+                    PhotoId = 12
+                },
+                new Coworking
+                {
+                    Id = 2,
+                    Name = "Galway Innovation Hub",
+                    Description = "A creative space by the sea, perfect for startups and freelancers.",
+                    Location = "78 Eyre Square, Galway",
+                    PhotoId = 13
+                },
+                new Coworking
+                {
+                    Id = 3,
+                    Name = "Cork Creative Space",
+                    Description = "A design-focused coworking hub with a strong community vibe.",
+                    Location = "12 Grand Parade, Cork",
+                    PhotoId = 14
+                },
+                new Coworking
+                {
+                    Id = 4,
+                    Name = "Limerick TechNest",
+                    Description = "A high-tech coworking space ideal for team sprints and solo focus.",
+                    Location = "45 O'Connell Street, Limerick",
+                    PhotoId = 15
+                },
+                new Coworking
+                {
+                    Id = 5,
+                    Name = "Waterford Hive",
+                    Description = "A quiet and affordable coworking option in the southeast of Ireland.",
+                    Location = "102 The Quay, Waterford",
+                    PhotoId = 16
+                }
+            };
         await context.Set<Coworking>().AddRangeAsync(coworkings, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
         // Create workspaces for each coworking
         var workspaces = new List<Workspaces>();
 
-        // For each coworking, create the standard workspace types
         foreach (var coworking in coworkings)
         {
-            // Create base workspace ID for this coworking
             int baseId = (coworking.Id - 1) * 3 + 1;
 
-            // Add Open space
             workspaces.Add(new Workspaces
             {
                 Id = baseId,
                 WorksapceTypeName = "Open space",
-                Description = "A vibrant shared area perfect for freelancers or small teams who enjoy a collaborative atmosphere. Choose any available desk and get to work with flexibility and ease.",
+                Description = "A shared area with flexible seating, ideal for networking and collaboration.",
                 CapacityId = 1,
                 CoworkingId = coworking.Id
             });
 
-            // Add Private rooms
             workspaces.Add(new Workspaces
             {
                 Id = baseId + 1,
                 WorksapceTypeName = "Private rooms",
-                Description = "Ideal for focused work, video calls, or small team huddles. These fully enclosed rooms offer privacy and come in a variety of sizes to fit your needs.",
+                Description = "Enclosed rooms for focused work, video calls, or small team meetings.",
                 CapacityId = 2,
                 CoworkingId = coworking.Id
             });
 
-            // Add Meeting rooms
             workspaces.Add(new Workspaces
             {
                 Id = baseId + 2,
                 WorksapceTypeName = "Meeting rooms",
-                Description = "Designed for productive meetings, workshops, or client presentations. Equipped with screens, whiteboards, and comfortable seating to keep your sessions running smoothly.",
+                Description = "Fully equipped rooms for productive meetings, workshops, or presentations.",
                 CapacityId = 4,
                 CoworkingId = coworking.Id
             });

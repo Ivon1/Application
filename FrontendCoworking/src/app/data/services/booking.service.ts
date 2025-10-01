@@ -7,7 +7,7 @@ import { BookingInterface } from '../interfaces/booking-interface';
   providedIn: 'root'
 })
     
-export class BookingService {
+export class BookingService  {
   http: HttpClient = inject(HttpClient);
   baseUrl: string = 'https://localhost:7201/Bookings';
   constructor() { }

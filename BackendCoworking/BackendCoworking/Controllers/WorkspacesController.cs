@@ -1,59 +1,35 @@
-﻿using AutoMapper;
-using BackendCoworking.DatabaseSets;
-using BackendCoworking.Models;
-using BackendCoworking.Models.DTOs;
+﻿using BackendCoworking.Models.DTOs;
+using BackendCoworking.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BackendCoworking.Controllers
 {
     [ApiController]
     [EnableCors("OpenCORSPolicy")]
     [Route("[controller]")]
-    public class WorkspacesController : ControllerBase
+    public class WorkspacesController(WorkspacesService _workspacesService) : ControllerBase
     {
-        private readonly CoworkingContextData _context;
-        private readonly IMapper _mapper;
-
-        public WorkspacesController(CoworkingContextData context, IMapper mapper)
-        {
-            _context = context;
-            _mapper = mapper;
-        }
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkspaceDTO>>> GetAllWorkspaces()
-        { 
-            var workspaces = await _context.Workspaces
-                .Include(w => w.Capacity)
-                .Include(w => w.WorkspaceAmenities)
-                    .ThenInclude(wa => wa.Amenity)
-                .Include(w => w.WorkspacePhotos)
-                    .ThenInclude(wp => wp.Photo)
-                .Include(w => w.WorkspaceAvailabilitys)
-                    .ThenInclude(wa => wa.Availability)
-                .ToListAsync();
-
-            var workspaceDTOs = _mapper.Map<IEnumerable<WorkspaceDTO>>(workspaces);
-            return Ok(workspaceDTOs);
+        {
+            var workspacesDTOs = await _workspacesService.GetAllWorkspacesAsync();
+            if (workspacesDTOs == null || !workspacesDTOs.Any())
+            {
+                return NotFound("No workspaces found.");
+            }
+            return Ok(workspacesDTOs);
         }
 
         [HttpGet("GetWorkspacesByCoworkingId/{id:int}")]
         public async Task<ActionResult<IEnumerable<WorkspaceDTO>>> GetWorkspacesByCoworkingId(int id)
         {
-            var workspaces = await _context.Workspaces.Where(w => w.CoworkingId == id)
-                .Include(w => w.Capacity)
-                .Include(w => w.WorkspaceAmenities)
-                    .ThenInclude(wa => wa.Amenity)
-                .Include(w => w.WorkspacePhotos)
-                    .ThenInclude(wp => wp.Photo)
-                .Include(w => w.WorkspaceAvailabilitys)
-                    .ThenInclude(wa => wa.Availability)
-                .ToListAsync();
-
-            var workspacesDTOs = _mapper.Map<IEnumerable<WorkspaceDTO>> (workspaces);
-            return Ok(workspacesDTOs);
+            var workspaces = await _workspacesService.GetWorkspacesByCoworkingIdAsync(id);
+            if (workspaces == null || !workspaces.Any())
+            {
+                return NotFound($"No workspaces found for Coworking ID {id}.");
+            }
+            return Ok(workspaces);
         }
     }
 }
