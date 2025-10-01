@@ -9,7 +9,7 @@ The project is organized into two main folders:
 ## Application Screenshots
 
 ### Coworking Spaces Overview
-![Coworking Spaces Page](https://ibb.co/1YK8JBjZ)
+![Coworking Spaces Page](https://github.com/Ivon1/Application/blob/develop/screenshots/coworking-spaces.png?raw=true)
 *Browse available coworking spaces with location and availability information*
 
 ### Individual Coworking Details
@@ -93,4 +93,5 @@ The project is organized into two main folders:
 - **Rich UI Components**: Custom date pickers, time selectors, and image galleries
 
 - **Form Validation**: Comprehensive form validation for booking details
+
 
