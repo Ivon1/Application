@@ -1,5 +1,7 @@
 ﻿# CoWorking
 
+A full-stack web application for booking coworking spaces with an intuitive interface and comprehensive booking management features. The project consists of a .NET Core Web API backend and an Angular frontend with responsive design for all devices. The backend follows a 3-layer architectural pattern ensuring clean separation of concerns and maintainability.
+
 ## Project Structure
 
 The project is organized into two main folders:
@@ -86,6 +88,7 @@ The project is organized into two main folders:
 - **Rich UI Components**: Custom date pickers, time selectors, and image galleries
 
 - **Form Validation**: Comprehensive form validation for booking details
+
 
 
 
